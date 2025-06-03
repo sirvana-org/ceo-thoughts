@@ -3,6 +3,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import fs from "fs";
 import path from "path";
+import { Tweet } from "react-tweet";
 
 const plusJakartaSans = Plus_Jakarta_Sans({ subsets: ["latin"] });
 
@@ -14,6 +15,25 @@ export default function Home() {
     <main
       className={`${plusJakartaSans.className} min-h-screen bg-white relative w-full overflow-hidden`}
     >
+      {/* Hero Section */}
+      <section className="w-full flex flex-col items-center pt-10 pb-4 gap-12">
+        {/* Centered Logo */}
+        <img
+          src="/assets/logoLarge.svg"
+          alt="Melian Logo"
+          className="w-56 md:w-72 lg:w-80 h-auto mb-6"
+        />
+
+        {/* Horizontal product strip */}
+        <div className="w-full overflow-hidden mb-12">
+          <img
+            src="/assets/products.png"
+            alt="Product showcase"
+            className="w-full h-auto object-contain"
+          />
+        </div>
+      </section>
+
       <div className="w-screen md:max-w-4xl mx-auto px-6 py-12">
         <article className="prose prose-lg prose-gray max-w-none">
           <ReactMarkdown
@@ -82,6 +102,19 @@ export default function Home() {
               ),
               a: ({ children, href }) => {
                 const hrefStr = href as string;
+                // Detect Twitter/X status links and embed them
+                const tweetMatch = hrefStr.match(
+                  /^https?:\/\/(?:twitter\.com|x\.com)\/[^/]+\/status\/([0-9]+)/i
+                );
+                if (tweetMatch) {
+                  const tweetId = tweetMatch[1];
+                  return (
+                    <div className="my-6 flex justify-center">
+                      <Tweet id={tweetId} />
+                    </div>
+                  );
+                }
+                // Existing video fallback
                 if (/\.(mp4|webm|ogg)$/i.test(hrefStr)) {
                   return (
                     <video
@@ -93,6 +126,7 @@ export default function Home() {
                     ></video>
                   );
                 }
+                // Default link rendering
                 return (
                   <a
                     href={hrefStr}
