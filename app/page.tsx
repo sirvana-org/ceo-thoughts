@@ -12,7 +12,7 @@ const markdownContent = fs.readFileSync(markdownFilePath, "utf8");
 export default function Home() {
   return (
     <main
-      className={`${plusJakartaSans.className} min-h-screen bg-white relative w-full`}
+      className={`${plusJakartaSans.className} min-h-screen bg-white relative w-full overflow-hidden`}
     >
       <div className="w-screen md:max-w-4xl mx-auto px-6 py-12">
         <article className="prose prose-lg prose-gray max-w-none">
@@ -96,7 +96,7 @@ export default function Home() {
                 return (
                   <a
                     href={hrefStr}
-                    className="text-blue-600 hover:text-blue-800 underline"
+                    className="text-blue-600 hover:text-blue-800 underline truncate max-w-2/4"
                   >
                     {children}
                   </a>
