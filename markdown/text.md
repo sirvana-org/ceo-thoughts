@@ -85,3 +85,5 @@ Federico came to the hacker house for what was supposed to be a one-hour meeting
 His story, experience, and expertise, combined with this level of conviction, shocked us. We are thrilled to welcome Hi Ventures, along with Guillermo Rauch and Damian Schenkelman, as new partners in our mission.
 
 We are very grateful to all our users, friends, investors, partners, and everyone who has always supported us. We know there's still 99% of the work left to do. We're just getting started.
+
+---

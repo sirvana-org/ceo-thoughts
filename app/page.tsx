@@ -171,30 +171,30 @@ export default function Home() {
         </article>
 
         {/* Mobile App Download Section - Inline below content */}
-        <div className="block min-w-[1200px]:hidden mt-8">
+        <div className="block min-[1200px]:hidden mt-8">
           <a
             href="https://apps.apple.com/us/app/melian/id6738385324"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-white/80 text-gray-900 rounded-2xl block w-full "
+            className="bg-white/80 text-gray-900 rounded-2xl flex flex-col items-center text-center p-4"
           >
             {/* Header with logo */}
-            <div className="flex items-center space-x-2 mb-2">
+            <div className="flex items-center justify-center space-x-2 mb-3">
               <img
                 src="/assets/logoSmall.png"
                 alt="Melian Logo"
                 className="w-8 h-8 rounded-full"
               />
-              <div className="text-2xl font-semibold">Get the App</div>
+              <div className="text-3xl font-semibold">Get the App</div>
             </div>
 
             {/* Description */}
-            <div className="text-md text-gray-600 mb-3">
+            <div className="text-lg text-gray-600 mb-4">
               Effortless shopping
             </div>
 
             {/* App Store Badge */}
-            <div>
+            <div className="flex justify-center">
               <img
                 src="/assets/appStoreBlack.svg"
                 alt="Download on the App Store"
@@ -206,7 +206,7 @@ export default function Home() {
       </div>
 
       {/* Floating Download Button - Desktop only */}
-      <div className="hidden min-w-[1200px]:block fixed bottom-6 left-6 z-50">
+      <div className="hidden min-[1200px]:block fixed bottom-6 left-6 z-50">
         <a
           href="https://apps.apple.com/us/app/melian/id6738385324"
           target="_blank"
