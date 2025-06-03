@@ -8,7 +8,7 @@ Towards that goal, we are thrilled to also announce that we secured **$2.1M in 
 
 Hi Ventures is our [lead investor](https://vercel.com/about#investors), alongside Guillermo Rauch and Damian Schenkelman.
 
-[reel_melian.mp4](files/reel_melian.mp4)
+[reel_melian.mp4](https://ig2l7ke5kngujsgy.public.blob.vercel-storage.com/reel_melian-pFkUytKSQih5t8JxWFsGo072EuR2Ay.mp4)
 
 ---
 
