@@ -12,9 +12,9 @@ const markdownContent = fs.readFileSync(markdownFilePath, "utf8");
 export default function Home() {
   return (
     <main
-      className={`${plusJakartaSans.className} min-h-screen bg-white relative`}
+      className={`${plusJakartaSans.className} min-h-screen bg-white relative w-full`}
     >
-      <div className="max-w-4xl mx-auto px-6 py-12">
+      <div className="w-full md:max-w-4xl mx-auto px-6 py-12">
         <article className="prose prose-lg prose-gray max-w-none">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
@@ -89,7 +89,7 @@ export default function Home() {
                       controls
                       autoPlay
                       loop
-                      className="mx-auto max-h-[70vh] max-w-full object-contain"
+                      className="mx-auto max-h-[70vh] max-w-full object-contain shadow-none outline-none focus:outline-none focus:shadow-none"
                     ></video>
                   );
                 }
@@ -118,7 +118,7 @@ export default function Home() {
                       controls
                       autoPlay
                       loop
-                      className="mx-auto max-h-[70vh] max-w-full object-contain"
+                      className="mx-auto max-h-[70vh] max-w-full object-contain shadow-none outline-none focus:outline-none focus:shadow-none"
                     ></video>
                   );
                 }
@@ -136,6 +136,24 @@ export default function Home() {
           </ReactMarkdown>
         </article>
       </div>
+
+      {/* Top Right Video Logo Link */}
+      {/* <div className="fixed top-4 left-4 z-50">
+        <a
+          href="https://apps.apple.com/us/app/melian/id6738385324"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <video
+            src="/assets/videoReCool.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-16 h-16 rounded-full"
+          />
+        </a>
+      </div> */}
 
       {/* Floating Download Button */}
       <div className="fixed bottom-6 left-6 z-50">

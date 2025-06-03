@@ -92,3 +92,15 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Remove default outline/shadow that browsers sometimes apply to video when it is focused or paused */
+video,
+video:focus,
+video:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+video::-webkit-media-controls-panel {
+  box-shadow: none !important;
+}
