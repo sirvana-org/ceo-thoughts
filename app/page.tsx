@@ -14,7 +14,7 @@ export default function Home() {
     <main
       className={`${plusJakartaSans.className} min-h-screen bg-white relative w-full`}
     >
-      <div className="w-full md:max-w-4xl mx-auto px-6 py-12">
+      <div className="w-screen md:max-w-4xl mx-auto px-6 py-12">
         <article className="prose prose-lg prose-gray max-w-none">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
@@ -135,33 +135,49 @@ export default function Home() {
             {markdownContent}
           </ReactMarkdown>
         </article>
+
+        {/* Mobile App Download Section - Inline below content */}
+        <div className="block min-w-[1200px]:hidden mt-8">
+          <a
+            href="https://apps.apple.com/us/app/melian/id6738385324"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-white/80 text-gray-900 rounded-2xl block w-full "
+          >
+            {/* Header with logo */}
+            <div className="flex items-center space-x-2 mb-2">
+              <img
+                src="/assets/logoSmall.png"
+                alt="Melian Logo"
+                className="w-8 h-8 rounded-full"
+              />
+              <div className="text-2xl font-semibold">Get the App</div>
+            </div>
+
+            {/* Description */}
+            <div className="text-md text-gray-600 mb-3">
+              Effortless shopping
+            </div>
+
+            {/* App Store Badge */}
+            <div>
+              <img
+                src="/assets/appStoreBlack.svg"
+                alt="Download on the App Store"
+                className="h-8 w-auto"
+              />
+            </div>
+          </a>
+        </div>
       </div>
 
-      {/* Top Right Video Logo Link */}
-      {/* <div className="fixed top-4 left-4 z-50">
+      {/* Floating Download Button - Desktop only */}
+      <div className="hidden min-w-[1200px]:block fixed bottom-6 left-6 z-50">
         <a
           href="https://apps.apple.com/us/app/melian/id6738385324"
           target="_blank"
           rel="noopener noreferrer"
-        >
-          <video
-            src="/assets/videoReCool.mp4"
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-16 h-16 rounded-full"
-          />
-        </a>
-      </div> */}
-
-      {/* Floating Download Button */}
-      <div className="fixed bottom-6 left-6 z-50">
-        <a
-          href="https://apps.apple.com/us/app/melian/id6738385324"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-white/80 backdrop-blur-md text-gray-900 rounded-2xl shadow-lg p-4 block w-full"
+          className="bg-white/80 backdrop-blur-md text-gray-900 rounded-2xl block w-full"
         >
           {/* Header with logo */}
           <div className="flex items-center space-x-2 mb-2">
