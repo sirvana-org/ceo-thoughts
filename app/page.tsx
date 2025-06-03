@@ -1,17 +1,19 @@
-import { Geist } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import fs from "fs";
 import path from "path";
 
-const geist = Geist({ subsets: ["latin"] });
+const plusJakartaSans = Plus_Jakarta_Sans({ subsets: ["latin"] });
 
 const markdownFilePath = path.join(process.cwd(), "markdown", "text.md");
 const markdownContent = fs.readFileSync(markdownFilePath, "utf8");
 
 export default function Home() {
   return (
-    <main className={`${geist.className} min-h-screen bg-white`}>
+    <main
+      className={`${plusJakartaSans.className} min-h-screen bg-white relative`}
+    >
       <div className="max-w-4xl mx-auto px-6 py-12">
         <article className="prose prose-lg prose-gray max-w-none">
           <ReactMarkdown
@@ -85,6 +87,8 @@ export default function Home() {
                     <video
                       src={hrefStr}
                       controls
+                      autoPlay
+                      loop
                       className="mx-auto max-h-[70vh] max-w-full object-contain"
                     ></video>
                   );
@@ -112,6 +116,8 @@ export default function Home() {
                     <video
                       src={srcStr}
                       controls
+                      autoPlay
+                      loop
                       className="mx-auto max-h-[70vh] max-w-full object-contain"
                     ></video>
                   );
@@ -129,6 +135,38 @@ export default function Home() {
             {markdownContent}
           </ReactMarkdown>
         </article>
+      </div>
+
+      {/* Floating Download Button */}
+      <div className="fixed bottom-6 left-6 z-50">
+        <a
+          href="https://apps.apple.com/us/app/melian/id6738385324"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-white/80 backdrop-blur-md text-gray-900 rounded-2xl shadow-lg p-4 block w-full"
+        >
+          {/* Header with logo */}
+          <div className="flex items-center space-x-2 mb-2">
+            <img
+              src="/assets/logoSmall.png"
+              alt="Melian Logo"
+              className="w-8 h-8 rounded-full"
+            />
+            <div className="text-2xl font-semibold">Get the App</div>
+          </div>
+
+          {/* Description */}
+          <div className="text-md text-gray-600 mb-3">Effortless shopping</div>
+
+          {/* App Store Badge */}
+          <div>
+            <img
+              src="/assets/appStoreBlack.svg"
+              alt="Download on the App Store"
+              className="h-8 w-auto"
+            />
+          </div>
+        </a>
       </div>
     </main>
   );
