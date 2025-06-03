@@ -76,11 +76,11 @@ To accelerate our mission of organizing the world's products, we have raised $2.
 
 Having a partner who deeply understands our vision and can guide us through our growth journey is invaluable to our team.
 
-![antoni.png](files/antoni.png)
+![antoni.jpg](files/antoni.jpg)
 
 Federico came to the hacker house for what was supposed to be a one-hour meeting, which extended to four hours and ended with him writing a term sheet right there on a printed Paul Graham essay I had lying around.
 
-![paul.png](files/paul.png)
+![penal.png](files/penal.png)
 
 His story, experience, and expertise, combined with this level of conviction, shocked us. We are thrilled to welcome Hi Ventures, along with Guillermo Rauch and Damian Schenkelman, as new partners in our mission.
 

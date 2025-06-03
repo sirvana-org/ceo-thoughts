@@ -21,7 +21,7 @@ export default function Home() {
         <img
           src="/assets/logoLarge.svg"
           alt="Melian Logo"
-          className="w-56 md:w-72 lg:w-80 h-auto mb-6"
+          className="w-40 sm:w-48 md:w-72 lg:w-80 h-auto mb-6"
         />
 
         {/* Horizontal product strip */}
@@ -29,7 +29,7 @@ export default function Home() {
           <img
             src="/assets/products.png"
             alt="Product showcase"
-            className="w-full h-auto object-contain"
+            className="w-full h-auto object-contain scale-110 md:scale-100"
           />
         </div>
       </section>
