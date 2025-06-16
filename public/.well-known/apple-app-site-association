@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appID": "M9365348ZT.com.sirvana.app",
+        "paths": [
+          "/*",
+          "/--/*"
+        ]
+      }
+    ]
+  }
+}
