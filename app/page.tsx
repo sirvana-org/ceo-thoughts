@@ -19,7 +19,7 @@ export default function Home() {
       <section className="w-full flex flex-col items-center pt-10 pb-4 gap-12">
         {/* Centered Logo */}
         <img
-          src="/assets/logoLarge.svg"
+          src="/assets/logoLarge.png"
           alt="Melian Logo"
           className="w-40 sm:w-48 md:w-72 lg:w-80 h-auto mb-6"
         />
