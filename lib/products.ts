@@ -9,18 +9,17 @@ export async function fetchProduct(productId: string): Promise<ProductPage | nul
   if (!productId) return null;
 
 
+  const url = `http://localhost:3030/products/${productId}?product=yes`;
   try {
-    const res = await fetch(`https://backend-ts-cocg.onrender.com/products/${productId}`, {
-      // Revalidate at most once per minute
-      next: { revalidate: 60 },
+    const res = await fetch(url, {
+      cache: "no-store",
+      method: "GET",
     });
 
     if (!res.ok) return null;
 
-    const data = (await res.json()) as { product?: ProductPage };
-    if (data?.product) {
-      return data.product;
-    }
+    const data = (await res.json()) as ProductPage;
+    return data;
   } catch {
     return null;
   }

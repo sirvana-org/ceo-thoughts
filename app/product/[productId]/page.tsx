@@ -13,7 +13,8 @@ export const revalidate = 60;
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const product = await fetchProduct(params.productId);
+  const { productId } = await params;
+  const product = await fetchProduct(productId);
 
   if (!product) {
     return {
@@ -23,7 +24,6 @@ export async function generateMetadata({
   }
 
   const firstImage = product.images?.[0];
-  fetchProduct;
   return {
     title: product.name,
     description: product.description ?? undefined,
@@ -31,7 +31,7 @@ export async function generateMetadata({
       title: product.name,
       description: product.description ?? undefined,
       type: "website",
-      url: product.url ?? `https://sirvana.com/product/${product.id}`,
+      url: product.url ?? `https://melian.com/product/${product.id}`,
       siteName: product.storeName,
       images: product.images?.map((img) => ({
         url: img.url,
@@ -52,7 +52,8 @@ export async function generateMetadata({
 }
 
 export default async function ProductPage({ params }: PageProps) {
-  const product = await fetchProduct(params.productId);
+  const { productId } = await params;
+  const product = await fetchProduct(productId);
 
   if (!product) {
     notFound();
