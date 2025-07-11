@@ -59,5 +59,5 @@ export default async function ProductPage({ params }: PageProps) {
     notFound();
   }
 
-  return null;
+  return <div>{product.name}</div>;
 }
