@@ -9,7 +9,7 @@ export async function fetchProduct(productId: string): Promise<ProductPage | nul
   if (!productId) return null;
 
 
-  const url = `http://localhost:3030/products/${productId}?product=yes`;
+  const url = `https://backend-ts-cocg.onrender.com/products/${productId}?product=yes`;
   try {
     const res = await fetch(url, {
       cache: "no-store",
