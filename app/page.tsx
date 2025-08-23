@@ -3,14 +3,29 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import fs from "fs";
 import path from "path";
-import { Tweet } from "react-tweet";
+import { getTweet } from "react-tweet/api";
+import { EmbeddedTweet, TweetNotFound } from "react-tweet";
 
 const plusJakartaSans = Plus_Jakarta_Sans({ subsets: ["latin"] });
 
 const markdownFilePath = path.join(process.cwd(), "markdown", "text.md");
 const markdownContent = fs.readFileSync(markdownFilePath, "utf8");
 
-export default function Home() {
+const extractTweetIds = (content: string) => {
+  const tweetRegex = /https?:\/\/(?:twitter\.com|x\.com)\/[^/]+\/status\/(\d+)/gi;
+  const matches = content.matchAll(tweetRegex);
+  return Array.from(matches, m => m[1]);
+};
+
+export default async function Home() {
+  const tweetIds = extractTweetIds(markdownContent);
+  const tweets = await Promise.all(
+    tweetIds.map(async (id) => {
+      const tweet = await getTweet(id);
+      return { id, tweet };
+    })
+  );
+  const tweetsMap = Object.fromEntries(tweets.map(t => [t.id, t.tweet]));
   return (
     <main
       className={`${plusJakartaSans.className} min-h-screen bg-white relative w-full overflow-hidden`}
@@ -54,9 +69,22 @@ export default function Home() {
                   {children}
                 </h3>
               ),
-              p: ({ children }) => (
-                <p className="mb-4 text-gray-700 leading-relaxed">{children}</p>
-              ),
+              p: ({ children }) => {
+                // Check if children contains any block elements (divs, articles, etc)
+                const hasBlockElements = Array.isArray(children) 
+                  ? children.some(child => 
+                      child?.props?.className?.includes('my-6') || 
+                      child?.type === 'div' ||
+                      child?.type === 'article')
+                  : children?.props?.className?.includes('my-6');
+                
+                // If block elements are present, render as div instead of p
+                if (hasBlockElements) {
+                  return <div className="mb-4 text-gray-700 leading-relaxed">{children}</div>;
+                }
+                
+                return <p className="mb-4 text-gray-700 leading-relaxed">{children}</p>;
+              },
               code: ({ children, className }) => {
                 const isInline = !className;
                 if (isInline) {
@@ -108,9 +136,10 @@ export default function Home() {
                 );
                 if (tweetMatch) {
                   const tweetId = tweetMatch[1];
+                  const tweet = tweetsMap[tweetId];
                   return (
                     <div className="my-6 flex justify-center max-h-[70vh]">
-                      <Tweet id={tweetId} />
+                      {tweet ? <EmbeddedTweet tweet={tweet} /> : <TweetNotFound />}
                     </div>
                   );
                 }
