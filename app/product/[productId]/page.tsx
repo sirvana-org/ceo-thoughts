@@ -1,6 +1,6 @@
-import { fetchProduct } from "@/lib/products";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { fetchProduct } from "@/lib/products";
 
 interface PageProps {
   params: {
