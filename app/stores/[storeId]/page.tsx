@@ -30,21 +30,6 @@ export async function generateMetadata({
   const title = store.page_title || `${store.name} - Shop Online`;
   const description = store.description || `Shop at ${store.name}. ${store.verified ? "Verified store" : "Online store"} with ${store.categories ? `products in ${store.categories}` : "quality products"}. Discover amazing deals and products.`;
   const keywords = store.keywords || `${store.name}, online shopping, ${store.categories || "products"}, deals, shop`;
-  
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "Store",
-    name: store.name,
-    description: store.description || description,
-    url: store.url || `https://melian.com/store/${store.id}`,
-    logo: store.logo || undefined,
-    aggregateRating: store.verified ? {
-      "@type": "AggregateRating",
-      ratingValue: store.rank || 4.5,
-      bestRating: 5,
-      worstRating: 1,
-    } : undefined,
-  };
 
   return {
     title,
