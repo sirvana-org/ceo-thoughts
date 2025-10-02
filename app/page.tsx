@@ -1,10 +1,10 @@
-import { Plus_Jakarta_Sans } from "next/font/google";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import fs from "fs";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import path from "path";
-import { getTweet } from "react-tweet/api";
+import ReactMarkdown from "react-markdown";
 import { EmbeddedTweet, TweetNotFound } from "react-tweet";
+import { getTweet } from "react-tweet/api";
+import remarkGfm from "remark-gfm";
 
 const plusJakartaSans = Plus_Jakarta_Sans({ subsets: ["latin"] });
 
