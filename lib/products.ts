@@ -8,12 +8,14 @@ import { ProductPage } from "@/types/product";
 export async function fetchProduct(productId: string): Promise<ProductPage | null> {
   if (!productId) return null;
 
-
-  const url = `https://backend-ts-cocg.onrender.com/products/${productId}?product=yes`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/products/${productId}?product=yes`;
   try {
     const res = await fetch(url, {
       cache: "no-store",
       method: "GET",
+      headers: {
+        'Authorization': 'Bearer no-token-secret',
+      },
     });
 
     if (!res.ok) return null;

@@ -3,11 +3,14 @@ import type { StoreInfo } from "@/types/store";
 export async function fetchStore(storeId: string): Promise<StoreInfo | null> {
 	if (!storeId) return null;
 
-	const url = `https://backend-ts-cocg.onrender.com/stores/${encodeURIComponent(storeId)}`;
+	const url = `${process.env.NEXT_PUBLIC_API_URL}/stores/${encodeURIComponent(storeId)}`;
 	try {
 		const res = await fetch(url, {
 			cache: "no-store",
 			method: "GET",
+			headers: {
+				'Authorization': 'Bearer no-token-secret',
+			},
 		});
 
 		if (!res.ok) return null;
