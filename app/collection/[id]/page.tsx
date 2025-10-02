@@ -4,7 +4,7 @@ import { fetchCollection } from "@/lib/collections";
 
 interface PageProps {
   params: {
-    collectionId: string;
+    id: string;
   };
 }
 
@@ -13,8 +13,8 @@ export const revalidate = 60;
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { collectionId } = await params;
-  const collection = await fetchCollection(collectionId);
+  const { id } = await params;
+  const collection = await fetchCollection(id);
 
   if (!collection) {
     return {
@@ -96,8 +96,8 @@ export async function generateMetadata({
 }
 
 export default async function CollectionPage({ params }: PageProps) {
-  const { collectionId } = await params;
-  const collection = await fetchCollection(collectionId);
+  const { id } = await params;
+  const collection = await fetchCollection(id);
 
   if (!collection) {
     notFound();

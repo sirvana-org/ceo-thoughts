@@ -4,7 +4,7 @@ import { fetchProduct } from "@/lib/products";
 
 interface PageProps {
   params: {
-    productId: string;
+    id: string;
   };
 }
 
@@ -13,8 +13,8 @@ export const revalidate = 60;
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { productId } = await params;
-  const product = await fetchProduct(productId);
+  const { id } = await params;
+  const product = await fetchProduct(id);
 
   if (!product) {
     return {
@@ -52,8 +52,8 @@ export async function generateMetadata({
 }
 
 export default async function ProductPage({ params }: PageProps) {
-  const { productId } = await params;
-  const product = await fetchProduct(productId);
+  const { id } = await params;
+  const product = await fetchProduct(id);
 
   if (!product) {
     notFound();
