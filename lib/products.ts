@@ -27,4 +27,26 @@ export async function fetchProduct(productId: string): Promise<ProductPage | nul
   }
 
   return null;
+}
+
+export async function fetchRelatedProducts(productId: string, limit = 20): Promise<any[] | null> {
+  if (!productId) return null;
+
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/products/${productId}/related?limit=${limit}`;
+  try {
+    const res = await fetch(url, {
+      cache: "no-store",
+      method: "GET",
+      headers: {
+        'Authorization': 'Bearer no-token-secret',
+      },
+    });
+
+    if (!res.ok) return null;
+
+    const data = await res.json();
+    return data.data || [];
+  } catch {
+    return null;
+  }
 } 
