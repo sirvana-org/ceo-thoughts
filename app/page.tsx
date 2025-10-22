@@ -1,6 +1,7 @@
-import fs from "fs";
+import fs from "node:fs";
+import path from "node:path";
 import { Plus_Jakarta_Sans } from "next/font/google";
-import path from "path";
+import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import { EmbeddedTweet, TweetNotFound } from "react-tweet";
 import { getTweet } from "react-tweet/api";
@@ -31,13 +32,21 @@ export default async function Home() {
       {/* Hero Section */}
       <section className="w-full flex flex-col items-center pt-10 pb-4 gap-12">
         {/* Centered Logo */}
-        <img src="/assets/logoLarge.png" alt="Melian Logo" className="w-40 sm:w-48 md:w-72 lg:w-80 h-auto mb-6" />
+        <Image
+          src="/assets/logoLarge.png"
+          alt="Melian Logo"
+          width={320}
+          height={80}
+          className="w-40 sm:w-48 md:w-72 lg:w-80 h-auto mb-6"
+        />
 
         {/* Horizontal product strip */}
         <div className="w-full overflow-hidden mb-12">
-          <img
+          <Image
             src="/assets/products.png"
             alt="Product showcase"
+            width={1200}
+            height={400}
             className="w-full h-auto object-contain scale-110 md:scale-100"
           />
         </div>
@@ -112,6 +121,7 @@ export default async function Home() {
                 // Existing video fallback
                 if (/\.(mp4|webm|ogg)$/i.test(hrefStr)) {
                   return (
+                    // biome-ignore lint/a11y/useMediaCaption: Dynamic markdown content without captions available
                     <video
                       src={hrefStr}
                       controls
@@ -135,6 +145,7 @@ export default async function Home() {
                 const srcStr = src as string;
                 if (/\.(mp4|webm|ogg)$/i.test(srcStr)) {
                   return (
+                    // biome-ignore lint/a11y/useMediaCaption: Dynamic markdown content without captions available
                     <video
                       src={srcStr}
                       controls
@@ -145,6 +156,7 @@ export default async function Home() {
                   );
                 }
                 return (
+                  // biome-ignore lint/performance/noImgElement: Dynamic markdown content requires img tag
                   <img
                     src={srcStr}
                     alt={typeof alt === "string" ? alt : "image"}
@@ -168,7 +180,7 @@ export default async function Home() {
           >
             {/* Header with logo */}
             <div className="flex items-center justify-center space-x-2 mb-3">
-              <img src="/assets/logoSmall.png" alt="Melian Logo" className="w-8 h-8 rounded-full" />
+              <Image src="/assets/logoSmall.png" alt="Melian Logo" width={32} height={32} className="rounded-full" />
               <div className="text-3xl font-semibold">Get the App</div>
             </div>
 
@@ -177,7 +189,7 @@ export default async function Home() {
 
             {/* App Store Badge */}
             <div className="flex justify-center">
-              <img src="/assets/appStoreBlack.svg" alt="Download on the App Store" className="h-8 w-auto" />
+              <Image src="/assets/appStoreBlack.svg" alt="Download on the App Store" width={120} height={32} />
             </div>
           </a>
         </div>
@@ -193,7 +205,7 @@ export default async function Home() {
         >
           {/* Header with logo */}
           <div className="flex items-center space-x-2 mb-2">
-            <img src="/assets/logoSmall.png" alt="Melian Logo" className="w-8 h-8 rounded-full" />
+            <Image src="/assets/logoSmall.png" alt="Melian Logo" width={32} height={32} className="rounded-full" />
             <div className="text-2xl font-semibold">Get the App</div>
           </div>
 
@@ -202,7 +214,7 @@ export default async function Home() {
 
           {/* App Store Badge */}
           <div>
-            <img src="/assets/appStoreBlack.svg" alt="Download on the App Store" className="h-8 w-auto" />
+            <Image src="/assets/appStoreBlack.svg" alt="Download on the App Store" width={120} height={32} />
           </div>
         </a>
       </div>

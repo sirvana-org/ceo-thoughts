@@ -1,5 +1,16 @@
 import type { StoreInfo } from "@/types/store";
 
+interface StoreProduct {
+  product_id: string;
+  image_url?: string;
+  name?: string;
+  price?: number;
+}
+
+interface StoreProductsResponse {
+  data: StoreProduct[];
+}
+
 export async function fetchStore(storeId: string): Promise<StoreInfo | null> {
   if (!storeId) return null;
 
@@ -22,7 +33,11 @@ export async function fetchStore(storeId: string): Promise<StoreInfo | null> {
   }
 }
 
-export async function fetchStoreProducts(storeId: string, limit = 24, offset = 0): Promise<any | null> {
+export async function fetchStoreProducts(
+  storeId: string,
+  limit = 24,
+  offset = 0,
+): Promise<StoreProductsResponse | null> {
   if (!storeId) return null;
 
   const url = `${process.env.NEXT_PUBLIC_API_URL}/products/ready?size=${limit}&from=${offset}&store_id=${encodeURIComponent(storeId)}`;

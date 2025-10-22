@@ -153,6 +153,7 @@ export default async function OutfitPage({ params }: PageProps) {
 
   return (
     <>
+      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Required for JSON-LD structured data */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
 
       <div className="min-h-screen bg-white relative pb-24 lg:pb-8">
@@ -175,7 +176,7 @@ export default async function OutfitPage({ params }: PageProps) {
                 <div className="flex gap-2 overflow-x-auto pb-2">
                   {outfit.images.slice(1).map((img, idx) => (
                     <div
-                      key={idx}
+                      key={img.url}
                       className="relative flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 border-gray-200"
                     >
                       <Image src={img.url} alt={`Outfit - ${idx + 2}`} fill className="object-cover" />
@@ -213,7 +214,7 @@ export default async function OutfitPage({ params }: PageProps) {
 
               <div className="flex items-center gap-6 text-gray-600">
                 <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" role="img" aria-label="Likes">
                     <path
                       fillRule="evenodd"
                       d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
@@ -223,7 +224,7 @@ export default async function OutfitPage({ params }: PageProps) {
                   <span className="font-medium">{outfit.likes.toLocaleString()}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" role="img" aria-label="Comments">
                     <path
                       fillRule="evenodd"
                       d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z"
@@ -242,6 +243,7 @@ export default async function OutfitPage({ params }: PageProps) {
               >
                 <span>Get the App to Like & Comment</span>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <title>Arrow right</title>
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
               </a>
@@ -293,14 +295,14 @@ export default async function OutfitPage({ params }: PageProps) {
             className="bg-white/90 backdrop-blur-md shadow-xl rounded-2xl p-6 block hover:bg-white transition-colors border border-gray-200"
           >
             <div className="flex items-center space-x-3 mb-2">
-              <img src="/assets/logoSmall.png" alt="Melian Logo" className="w-10 h-10 rounded-full" />
+              <Image src="/assets/logoSmall.png" alt="Melian Logo" width={40} height={40} className="rounded-full" />
               <div className="text-2xl font-semibold text-gray-900">Get the App</div>
             </div>
 
             <div className="text-sm text-gray-600 mb-3">Effortless shopping</div>
 
             <div>
-              <img src="/assets/appStoreBlack.svg" alt="Download on the App Store" className="h-10 w-auto" />
+              <Image src="/assets/appStoreBlack.svg" alt="Download on the App Store" width={120} height={40} />
             </div>
           </a>
         </div>
@@ -314,6 +316,7 @@ export default async function OutfitPage({ params }: PageProps) {
           >
             <span>Download App</span>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <title>Arrow right</title>
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
           </a>

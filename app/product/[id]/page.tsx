@@ -1,20 +1,26 @@
 "use client";
 
-import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { fetchProduct, fetchRelatedProducts } from "@/lib/products";
 import type { ProductPage } from "@/types/product";
 
+interface RelatedProduct {
+  product_id: string;
+  image_url?: string;
+  name?: string;
+  price?: number;
+}
+
 const appStoreUrl = "https://apps.apple.com/us/app/melian/id6738385324";
 
-export default function ProductPage() {
+export default function ProductDetailsPage() {
   const params = useParams();
   const id = params.id as string;
 
   const [product, setProduct] = useState<ProductPage | null>(null);
-  const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
+  const [relatedProducts, setRelatedProducts] = useState<RelatedProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
@@ -67,7 +73,8 @@ export default function ProductPage() {
               <div className="flex gap-2 overflow-x-auto pb-2">
                 {product.images.map((img, idx) => (
                   <button
-                    key={idx}
+                    key={img.url}
+                    type="button"
                     onClick={() => setSelectedImageIndex(idx)}
                     className={`relative flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
                       selectedImageIndex === idx
@@ -142,7 +149,8 @@ export default function ProductPage() {
               className="mt-6 w-full bg-gray-900 text-white rounded-xl px-8 py-4 flex items-center justify-center gap-3 font-semibold hover:bg-gray-800 transition-colors"
             >
               <span>Get the App to Purchase</span>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-label="Arrow right">
+                <title>Arrow right</title>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
             </a>
@@ -153,7 +161,7 @@ export default function ProductPage() {
           <div className="border-t border-gray-200 pt-12">
             <h2 className="text-2xl font-bold text-gray-900 mb-8">Related Products</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
-              {relatedProducts.map((relatedProduct: any) => (
+              {relatedProducts.map((relatedProduct: RelatedProduct) => (
                 <a
                   key={relatedProduct.product_id}
                   href={appStoreUrl}
@@ -197,14 +205,14 @@ export default function ProductPage() {
           className="bg-white/90 backdrop-blur-md shadow-xl rounded-2xl p-6 block hover:bg-white transition-colors border border-gray-200"
         >
           <div className="flex items-center space-x-3 mb-2">
-            <img src="/assets/logoSmall.png" alt="Melian Logo" className="w-10 h-10 rounded-full" />
+            <Image src="/assets/logoSmall.png" alt="Melian Logo" width={40} height={40} className="rounded-full" />
             <div className="text-2xl font-semibold text-gray-900">Get the App</div>
           </div>
 
           <div className="text-sm text-gray-600 mb-3">Effortless shopping</div>
 
           <div>
-            <img src="/assets/appStoreBlack.svg" alt="Download on the App Store" className="h-10 w-auto" />
+            <Image src="/assets/appStoreBlack.svg" alt="Download on the App Store" width={120} height={40} />
           </div>
         </a>
       </div>
@@ -217,7 +225,8 @@ export default function ProductPage() {
           className="bg-gray-900 text-white rounded-xl px-6 py-4 flex items-center justify-center gap-3 w-full font-semibold hover:bg-gray-800 transition-colors"
         >
           <span>Download App</span>
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-label="Arrow right">
+            <title>Arrow right</title>
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
           </svg>
         </a>

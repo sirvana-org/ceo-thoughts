@@ -140,6 +140,7 @@ export default async function ExternalProfilePage({ params }: PageProps) {
 
   return (
     <>
+      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Required for JSON-LD structured data */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <div className="min-h-screen bg-white flex items-center justify-center py-16 px-6 md:px-8 lg:px-12">
         <div className="bg-white border border-gray-200 rounded-3xl shadow-lg px-12 py-16 flex flex-col items-center gap-8">

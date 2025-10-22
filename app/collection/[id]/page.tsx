@@ -9,6 +9,13 @@ interface PageProps {
   };
 }
 
+interface CollectionProduct {
+  product_id: string;
+  image_url?: string;
+  name?: string;
+  price?: number;
+}
+
 export const revalidate = 60;
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -129,10 +136,10 @@ export default async function CollectionPage({ params }: PageProps) {
   };
 
   const appStoreUrl = "https://apps.apple.com/us/app/melian/id6738385324";
-  const deeplink = `https://melian.com/collection/${collection.id}`;
 
   return (
     <>
+      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Required for JSON-LD structured data */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
 
       <div className="min-h-screen bg-white relative">
@@ -197,7 +204,7 @@ export default async function CollectionPage({ params }: PageProps) {
 
           {products.length > 0 && (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
-              {products.map((product: any) => (
+              {products.map((product: CollectionProduct) => (
                 <a
                   key={product.product_id}
                   href={appStoreUrl}
@@ -239,14 +246,14 @@ export default async function CollectionPage({ params }: PageProps) {
             className="bg-white/90 backdrop-blur-md shadow-xl rounded-2xl p-6 block hover:bg-white transition-colors border border-gray-200"
           >
             <div className="flex items-center space-x-3 mb-2">
-              <img src="/assets/logoSmall.png" alt="Melian Logo" className="w-10 h-10 rounded-full" />
+              <Image src="/assets/logoSmall.png" alt="Melian Logo" width={40} height={40} className="rounded-full" />
               <div className="text-2xl font-semibold text-gray-900">Get the App</div>
             </div>
 
             <div className="text-sm text-gray-600 mb-3">Effortless shopping</div>
 
             <div>
-              <img src="/assets/appStoreBlack.svg" alt="Download on the App Store" className="h-10 w-auto" />
+              <Image src="/assets/appStoreBlack.svg" alt="Download on the App Store" width={120} height={40} />
             </div>
           </a>
         </div>
@@ -259,7 +266,14 @@ export default async function CollectionPage({ params }: PageProps) {
             className="bg-gray-900 text-white rounded-xl px-6 py-4 flex items-center justify-center gap-3 w-full font-semibold hover:bg-gray-800 transition-colors"
           >
             <span>Download App</span>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              role="img"
+              aria-label="Arrow right"
+            >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
           </a>
