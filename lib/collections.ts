@@ -2,7 +2,7 @@ export async function fetchCollection(collectionId: string) {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/collections/ready/${collectionId}`, {
       headers: {
-        'Authorization': 'Bearer no-token-secret',
+        Authorization: "Bearer no-token-secret",
       },
     });
 
@@ -13,7 +13,7 @@ export async function fetchCollection(collectionId: string) {
     const data = await response.json();
     return data.collection;
   } catch (error) {
-    console.error('Error fetching collection:', error);
+    console.error("Error fetching collection:", error);
     return null;
   }
 }
@@ -22,7 +22,7 @@ export async function fetchCollectionWithUser(collectionId: string) {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/collections/ready/${collectionId}`, {
       headers: {
-        'Authorization': 'Bearer no-token-secret',
+        Authorization: "Bearer no-token-secret",
       },
     });
 
@@ -33,7 +33,7 @@ export async function fetchCollectionWithUser(collectionId: string) {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching collection with user:', error);
+    console.error("Error fetching collection with user:", error);
     return null;
   }
 }
@@ -44,9 +44,9 @@ export async function fetchCollectionProducts(collectionId: string, limit = 24, 
       `${process.env.NEXT_PUBLIC_API_URL}/collections/ready/${collectionId}/products?limit=${limit}&offset=${offset}`,
       {
         headers: {
-          'Authorization': 'Bearer no-token-secret',
+          Authorization: "Bearer no-token-secret",
         },
-      }
+      },
     );
 
     if (!response.ok) {
@@ -56,7 +56,7 @@ export async function fetchCollectionProducts(collectionId: string, limit = 24, 
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching collection products:', error);
+    console.error("Error fetching collection products:", error);
     return null;
   }
 }

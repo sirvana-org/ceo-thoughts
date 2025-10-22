@@ -1,4 +1,4 @@
-import { OutfitPage } from "@/types/outfit";
+import type { OutfitPage } from "@/types/outfit";
 
 export async function fetchOutfit(outfitId: string): Promise<OutfitPage | null> {
   if (!outfitId) return null;
@@ -9,7 +9,7 @@ export async function fetchOutfit(outfitId: string): Promise<OutfitPage | null> 
       cache: "no-store",
       method: "GET",
       headers: {
-        'Authorization': 'Bearer no-token-secret',
+        Authorization: "Bearer no-token-secret",
       },
     });
 

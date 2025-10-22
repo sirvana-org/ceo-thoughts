@@ -59,13 +59,7 @@ export default function ProductPage() {
           <div className="flex flex-col gap-4">
             <div className="relative aspect-[3/4] bg-gray-100 rounded-2xl overflow-hidden">
               {currentImage && (
-                <Image
-                  src={currentImage.url}
-                  alt={product.name}
-                  fill
-                  className="object-cover"
-                  priority
-                />
+                <Image src={currentImage.url} alt={product.name} fill className="object-cover" priority />
               )}
             </div>
 
@@ -81,12 +75,7 @@ export default function ProductPage() {
                         : "border-gray-200 hover:border-gray-400"
                     }`}
                   >
-                    <Image
-                      src={img.url}
-                      alt={`${product.name} - ${idx + 1}`}
-                      fill
-                      className="object-cover"
-                    />
+                    <Image src={img.url} alt={`${product.name} - ${idx + 1}`} fill className="object-cover" />
                   </button>
                 ))}
               </div>
@@ -97,12 +86,7 @@ export default function ProductPage() {
             {product.storeLogo && (
               <div className="flex items-center gap-3">
                 <div className="relative w-12 h-12 rounded-full overflow-hidden bg-gray-100">
-                  <Image
-                    src={product.storeLogo}
-                    alt={product.storeName}
-                    fill
-                    className="object-cover"
-                  />
+                  <Image src={product.storeLogo} alt={product.storeName} fill className="object-cover" />
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">From</p>
@@ -112,24 +96,18 @@ export default function ProductPage() {
             )}
 
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                {product.name}
-              </h1>
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{product.name}</h1>
 
               {displayPrice && (
                 <div className="flex items-baseline gap-3 mb-4">
                   <span className="text-3xl font-bold text-gray-900">
                     {product.currency || "$"}
-                    {typeof displayPrice === "number"
-                      ? displayPrice.toFixed(2)
-                      : displayPrice}
+                    {typeof displayPrice === "number" ? displayPrice.toFixed(2) : displayPrice}
                   </span>
                   {product.promotionalPrice && product.price && (
                     <span className="text-xl text-gray-400 line-through">
                       {product.currency || "$"}
-                      {typeof product.price === "number"
-                        ? product.price.toFixed(2)
-                        : product.price}
+                      {typeof product.price === "number" ? product.price.toFixed(2) : product.price}
                     </span>
                   )}
                 </div>
@@ -144,24 +122,16 @@ export default function ProductPage() {
 
             <div className="flex flex-wrap gap-3 pt-4">
               {product.brand && (
-                <div className="px-4 py-2 bg-gray-100 rounded-full text-sm text-gray-700">
-                  Brand: {product.brand}
-                </div>
+                <div className="px-4 py-2 bg-gray-100 rounded-full text-sm text-gray-700">Brand: {product.brand}</div>
               )}
               {product.category && (
-                <div className="px-4 py-2 bg-gray-100 rounded-full text-sm text-gray-700">
-                  {product.category}
-                </div>
+                <div className="px-4 py-2 bg-gray-100 rounded-full text-sm text-gray-700">{product.category}</div>
               )}
               {product.color && (
-                <div className="px-4 py-2 bg-gray-100 rounded-full text-sm text-gray-700">
-                  Color: {product.color}
-                </div>
+                <div className="px-4 py-2 bg-gray-100 rounded-full text-sm text-gray-700">Color: {product.color}</div>
               )}
               {product.condition && (
-                <div className="px-4 py-2 bg-gray-100 rounded-full text-sm text-gray-700">
-                  {product.condition}
-                </div>
+                <div className="px-4 py-2 bg-gray-100 rounded-full text-sm text-gray-700">{product.condition}</div>
               )}
             </div>
 
@@ -173,12 +143,7 @@ export default function ProductPage() {
             >
               <span>Get the App to Purchase</span>
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M14 5l7 7m0 0l-7 7m7-7H3"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
             </a>
           </div>
@@ -207,13 +172,12 @@ export default function ProductPage() {
                     )}
                   </div>
                   {relatedProduct.name && (
-                    <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-1">
-                      {relatedProduct.name}
-                    </h3>
+                    <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-1">{relatedProduct.name}</h3>
                   )}
                   {relatedProduct.price && (
                     <p className="text-sm text-gray-600">
-                      ${typeof relatedProduct.price === "number"
+                      $
+                      {typeof relatedProduct.price === "number"
                         ? relatedProduct.price.toFixed(2)
                         : relatedProduct.price}
                     </p>
@@ -233,22 +197,14 @@ export default function ProductPage() {
           className="bg-white/90 backdrop-blur-md shadow-xl rounded-2xl p-6 block hover:bg-white transition-colors border border-gray-200"
         >
           <div className="flex items-center space-x-3 mb-2">
-            <img
-              src="/assets/logoSmall.png"
-              alt="Melian Logo"
-              className="w-10 h-10 rounded-full"
-            />
+            <img src="/assets/logoSmall.png" alt="Melian Logo" className="w-10 h-10 rounded-full" />
             <div className="text-2xl font-semibold text-gray-900">Get the App</div>
           </div>
 
           <div className="text-sm text-gray-600 mb-3">Effortless shopping</div>
 
           <div>
-            <img
-              src="/assets/appStoreBlack.svg"
-              alt="Download on the App Store"
-              className="h-10 w-auto"
-            />
+            <img src="/assets/appStoreBlack.svg" alt="Download on the App Store" className="h-10 w-auto" />
           </div>
         </a>
       </div>
@@ -262,12 +218,7 @@ export default function ProductPage() {
         >
           <span>Download App</span>
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M14 5l7 7m0 0l-7 7m7-7H3"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
           </svg>
         </a>
       </div>

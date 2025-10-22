@@ -11,9 +11,7 @@ interface PageProps {
 
 export const revalidate = 60;
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { outfitId } = await params;
   const outfit = await fetchOutfit(outfitId);
 
@@ -30,19 +28,19 @@ export async function generateMetadata({
 
   const username = outfit.user?.displayName || outfit.user?.username || "User";
   const title = outfit.caption
-    ? `${outfit.caption.slice(0, 60)}${outfit.caption.length > 60 ? '...' : ''} - ${username}'s Outfit`
+    ? `${outfit.caption.slice(0, 60)}${outfit.caption.length > 60 ? "..." : ""} - ${username}'s Outfit`
     : `${username}'s Outfit | Sirvana`;
 
   const description = outfit.caption
-    ? `${outfit.caption.slice(0, 155)}${outfit.caption.length > 155 ? '...' : ''}`
+    ? `${outfit.caption.slice(0, 155)}${outfit.caption.length > 155 ? "..." : ""}`
     : `Check out this outfit by ${username}. ${outfit.likes} likes, ${outfit.comments} comments. Discover similar products and styles on Sirvana.`;
 
   const brands = outfit.images
-    .flatMap(img => img.brandTags?.map(tag => tag.brandName) || [])
+    .flatMap((img) => img.brandTags?.map((tag) => tag.brandName) || [])
     .filter((v, i, a) => a.indexOf(v) === i)
-    .join(', ');
+    .join(", ");
 
-  const keywords = `outfit, fashion, style, ${username}, ${brands || 'clothing'}, ${outfit.likes} likes, sirvana`;
+  const keywords = `outfit, fashion, style, ${username}, ${brands || "clothing"}, ${outfit.likes} likes, sirvana`;
 
   const previewImage = outfit.images[0]?.url;
 
@@ -61,28 +59,30 @@ export async function generateMetadata({
       locale: "en_US",
       url: `https://melian.com/outfit/${outfit.id}`,
       siteName: "Sirvana",
-      images: previewImage ? [
-        {
-          url: previewImage,
-          width: 1200,
-          height: 630,
-          alt: `${username}'s outfit`,
-        },
-      ] : [
-        {
-          url: "/og-default.jpg",
-          width: 1200,
-          height: 630,
-          alt: "Sirvana",
-        },
-      ],
+      images: previewImage
+        ? [
+            {
+              url: previewImage,
+              width: 1200,
+              height: 630,
+              alt: `${username}'s outfit`,
+            },
+          ]
+        : [
+            {
+              url: "/og-default.jpg",
+              width: 1200,
+              height: 630,
+              alt: "Sirvana",
+            },
+          ],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
       site: "@sirvana",
-      creator: `@${outfit.user?.username || 'sirvana'}`,
+      creator: `@${outfit.user?.username || "sirvana"}`,
       images: previewImage ? [previewImage] : ["/og-default.jpg"],
     },
     alternates: {
@@ -104,8 +104,8 @@ export async function generateMetadata({
     },
     other: {
       "revisit-after": "7 days",
-      "rating": "general",
-      "distribution": "global",
+      rating: "general",
+      distribution: "global",
     },
   };
 }
@@ -129,11 +129,13 @@ export default async function OutfitPage({ params }: PageProps) {
     text: outfit.caption || undefined,
     url: `https://melian.com/outfit/${outfit.id}`,
     datePublished: outfit.postedAt,
-    author: outfit.user ? {
-      "@type": "Person",
-      name: outfit.user.displayName || outfit.user.username,
-      image: outfit.user.avatar || undefined,
-    } : undefined,
+    author: outfit.user
+      ? {
+          "@type": "Person",
+          name: outfit.user.displayName || outfit.user.username,
+          image: outfit.user.avatar || undefined,
+        }
+      : undefined,
     interactionStatistic: [
       {
         "@type": "InteractionCounter",
@@ -146,15 +148,12 @@ export default async function OutfitPage({ params }: PageProps) {
         userInteractionCount: outfit.comments,
       },
     ],
-    image: outfit.images.map(img => img.url),
+    image: outfit.images.map((img) => img.url),
   };
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
 
       <div className="min-h-screen bg-white relative pb-24 lg:pb-8">
         <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 py-8 md:py-12">
@@ -179,12 +178,7 @@ export default async function OutfitPage({ params }: PageProps) {
                       key={idx}
                       className="relative flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 border-gray-200"
                     >
-                      <Image
-                        src={img.url}
-                        alt={`Outfit - ${idx + 2}`}
-                        fill
-                        className="object-cover"
-                      />
+                      <Image src={img.url} alt={`Outfit - ${idx + 2}`} fill className="object-cover" />
                     </div>
                   ))}
                 </div>
@@ -205,12 +199,8 @@ export default async function OutfitPage({ params }: PageProps) {
                     )}
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-900">
-                      {outfit.user.displayName || outfit.user.username}
-                    </p>
-                    {outfit.user.displayName && (
-                      <p className="text-sm text-gray-500">@{outfit.user.username}</p>
-                    )}
+                    <p className="font-semibold text-gray-900">{outfit.user.displayName || outfit.user.username}</p>
+                    {outfit.user.displayName && <p className="text-sm text-gray-500">@{outfit.user.username}</p>}
                   </div>
                 </div>
               )}
@@ -252,12 +242,7 @@ export default async function OutfitPage({ params }: PageProps) {
               >
                 <span>Get the App to Like & Comment</span>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
               </a>
             </div>
@@ -286,15 +271,11 @@ export default async function OutfitPage({ params }: PageProps) {
                       )}
                     </div>
                     {product.name && (
-                      <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-1">
-                        {product.name}
-                      </h3>
+                      <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-1">{product.name}</h3>
                     )}
                     {product.price && (
                       <p className="text-sm text-gray-600">
-                        ${typeof product.price === "number"
-                          ? product.price.toFixed(2)
-                          : product.price}
+                        ${typeof product.price === "number" ? product.price.toFixed(2) : product.price}
                       </p>
                     )}
                   </a>
@@ -312,22 +293,14 @@ export default async function OutfitPage({ params }: PageProps) {
             className="bg-white/90 backdrop-blur-md shadow-xl rounded-2xl p-6 block hover:bg-white transition-colors border border-gray-200"
           >
             <div className="flex items-center space-x-3 mb-2">
-              <img
-                src="/assets/logoSmall.png"
-                alt="Melian Logo"
-                className="w-10 h-10 rounded-full"
-              />
+              <img src="/assets/logoSmall.png" alt="Melian Logo" className="w-10 h-10 rounded-full" />
               <div className="text-2xl font-semibold text-gray-900">Get the App</div>
             </div>
 
             <div className="text-sm text-gray-600 mb-3">Effortless shopping</div>
 
             <div>
-              <img
-                src="/assets/appStoreBlack.svg"
-                alt="Download on the App Store"
-                className="h-10 w-auto"
-              />
+              <img src="/assets/appStoreBlack.svg" alt="Download on the App Store" className="h-10 w-auto" />
             </div>
           </a>
         </div>
@@ -341,12 +314,7 @@ export default async function OutfitPage({ params }: PageProps) {
           >
             <span>Download App</span>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M14 5l7 7m0 0l-7 7m7-7H3"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
           </a>
         </div>

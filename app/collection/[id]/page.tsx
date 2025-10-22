@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { fetchCollection, fetchCollectionWithUser, fetchCollectionProducts } from "@/lib/collections";
+import { fetchCollection, fetchCollectionProducts, fetchCollectionWithUser } from "@/lib/collections";
 
 interface PageProps {
   params: {
@@ -11,9 +11,7 @@ interface PageProps {
 
 export const revalidate = 60;
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
   const collection = await fetchCollection(id);
 
@@ -29,7 +27,9 @@ export async function generateMetadata({
   }
 
   const title = collection.title || `${collection.name} - Curated Collection`;
-  const description = collection.description || `Explore ${collection.name}. A curated collection featuring ${collection.storesCount || 0} stores and ${collection.productsCount || 0} products. ${collection.subtitle || "Discover amazing finds and recommendations."}`;
+  const description =
+    collection.description ||
+    `Explore ${collection.name}. A curated collection featuring ${collection.storesCount || 0} stores and ${collection.productsCount || 0} products. ${collection.subtitle || "Discover amazing finds and recommendations."}`;
   const keywords = `${collection.name}, curated collection, shopping collection, ${collection.storesCount || 0} stores, ${collection.productsCount || 0} products, recommendations`;
 
   return {
@@ -47,21 +47,24 @@ export async function generateMetadata({
       locale: "en_US",
       url: `https://melian.com/collection/${collection.id}`,
       siteName: "Sirvana",
-      images: collection.previewImages && collection.previewImages.length > 0 ? [
-        {
-          url: collection.previewImages[0],
-          width: 1200,
-          height: 630,
-          alt: `${collection.name} collection preview`,
-        },
-      ] : [
-        {
-          url: "/og-default.jpg",
-          width: 1200,
-          height: 630,
-          alt: "Sirvana",
-        },
-      ],
+      images:
+        collection.previewImages && collection.previewImages.length > 0
+          ? [
+              {
+                url: collection.previewImages[0],
+                width: 1200,
+                height: 630,
+                alt: `${collection.name} collection preview`,
+              },
+            ]
+          : [
+              {
+                url: "/og-default.jpg",
+                width: 1200,
+                height: 630,
+                alt: "Sirvana",
+              },
+            ],
     },
     twitter: {
       card: "summary_large_image",
@@ -69,7 +72,10 @@ export async function generateMetadata({
       description,
       site: "@sirvana",
       creator: "@sirvana",
-      images: collection.previewImages && collection.previewImages.length > 0 ? [collection.previewImages[0]] : ["/og-default.jpg"],
+      images:
+        collection.previewImages && collection.previewImages.length > 0
+          ? [collection.previewImages[0]]
+          : ["/og-default.jpg"],
     },
     alternates: {
       canonical: `https://melian.com/collection/${collection.id}`,
@@ -90,8 +96,8 @@ export async function generateMetadata({
     },
     other: {
       "revisit-after": "7 days",
-      "rating": "general",
-      "distribution": "global",
+      rating: "general",
+      distribution: "global",
     },
   };
 }
@@ -113,7 +119,9 @@ export default async function CollectionPage({ params }: PageProps) {
     "@type": "Collection",
     "@id": `https://melian.com/collection/${collection.id}`,
     name: collection.name,
-    description: collection.description || `A curated collection featuring ${collection.storesCount || 0} stores and ${collection.productsCount || 0} products`,
+    description:
+      collection.description ||
+      `A curated collection featuring ${collection.storesCount || 0} stores and ${collection.productsCount || 0} products`,
     url: `https://melian.com/collection/${collection.id}`,
     identifier: collection.id,
     numberOfItems: collection.productsCount || 0,
@@ -125,32 +133,19 @@ export default async function CollectionPage({ params }: PageProps) {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
 
       <div className="min-h-screen bg-white relative">
         {collection.cover ? (
           <div className="relative w-full h-[50vh] min-h-[400px] max-h-[600px]">
-            <Image
-              src={collection.cover}
-              alt={collection.name}
-              fill
-              className="object-cover"
-              priority
-            />
+            <Image src={collection.cover} alt={collection.name} fill className="object-cover" priority />
             <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/30 to-black/80" />
 
             <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 lg:p-16">
               <div className="max-w-7xl mx-auto">
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
-                  {collection.name}
-                </h1>
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">{collection.name}</h1>
                 {collection.subtitle && (
-                  <p className="text-lg md:text-xl text-white/90 max-w-2xl">
-                    {collection.subtitle}
-                  </p>
+                  <p className="text-lg md:text-xl text-white/90 max-w-2xl">{collection.subtitle}</p>
                 )}
               </div>
             </div>
@@ -158,13 +153,9 @@ export default async function CollectionPage({ params }: PageProps) {
         ) : (
           <div className="bg-gradient-to-b from-gray-50 to-white py-12 md:py-16 lg:py-20">
             <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">
-                {collection.name}
-              </h1>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">{collection.name}</h1>
               {collection.subtitle && (
-                <p className="text-lg md:text-xl text-gray-600 max-w-2xl">
-                  {collection.subtitle}
-                </p>
+                <p className="text-lg md:text-xl text-gray-600 max-w-2xl">{collection.subtitle}</p>
               )}
             </div>
           </div>
@@ -174,21 +165,12 @@ export default async function CollectionPage({ params }: PageProps) {
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6 mb-8 md:mb-12">
             {user?.userProfilePicture && (
               <div className="relative w-16 h-16 rounded-full overflow-hidden ring-2 ring-gray-200">
-                <Image
-                  src={user.userProfilePicture}
-                  alt={user.userName || "User"}
-                  fill
-                  className="object-cover"
-                />
+                <Image src={user.userProfilePicture} alt={user.userName || "User"} fill className="object-cover" />
               </div>
             )}
 
             <div className="flex-1">
-              {user?.userName && (
-                <p className="text-lg font-medium text-gray-900 mb-2">
-                  {user.userName}
-                </p>
-              )}
+              {user?.userName && <p className="text-lg font-medium text-gray-900 mb-2">{user.userName}</p>}
               <div className="flex flex-wrap gap-4 text-sm text-gray-600">
                 <span>{collection.productsCount || 0} products</span>
                 {collection.storesCount > 0 && (
@@ -234,15 +216,9 @@ export default async function CollectionPage({ params }: PageProps) {
                     )}
                   </div>
                   {product.name && (
-                    <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-1">
-                      {product.name}
-                    </h3>
+                    <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-1">{product.name}</h3>
                   )}
-                  {product.price && (
-                    <p className="text-sm text-gray-600">
-                      ${product.price.toFixed(2)}
-                    </p>
-                  )}
+                  {product.price && <p className="text-sm text-gray-600">${product.price.toFixed(2)}</p>}
                 </a>
               ))}
             </div>
@@ -263,22 +239,14 @@ export default async function CollectionPage({ params }: PageProps) {
             className="bg-white/90 backdrop-blur-md shadow-xl rounded-2xl p-6 block hover:bg-white transition-colors border border-gray-200"
           >
             <div className="flex items-center space-x-3 mb-2">
-              <img
-                src="/assets/logoSmall.png"
-                alt="Melian Logo"
-                className="w-10 h-10 rounded-full"
-              />
+              <img src="/assets/logoSmall.png" alt="Melian Logo" className="w-10 h-10 rounded-full" />
               <div className="text-2xl font-semibold text-gray-900">Get the App</div>
             </div>
 
             <div className="text-sm text-gray-600 mb-3">Effortless shopping</div>
 
             <div>
-              <img
-                src="/assets/appStoreBlack.svg"
-                alt="Download on the App Store"
-                className="h-10 w-auto"
-              />
+              <img src="/assets/appStoreBlack.svg" alt="Download on the App Store" className="h-10 w-auto" />
             </div>
           </a>
         </div>

@@ -21,4 +21,4 @@ export type ProductPage = {
   storeLogo: string;
   storeName: string;
   isLiked: boolean;
-}; 
+};

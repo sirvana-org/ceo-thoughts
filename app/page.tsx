@@ -14,7 +14,7 @@ const markdownContent = fs.readFileSync(markdownFilePath, "utf8");
 const extractTweetIds = (content: string) => {
   const tweetRegex = /https?:\/\/(?:twitter\.com|x\.com)\/[^/]+\/status\/(\d+)/gi;
   const matches = content.matchAll(tweetRegex);
-  return Array.from(matches, m => m[1]);
+  return Array.from(matches, (m) => m[1]);
 };
 
 export default async function Home() {
@@ -23,21 +23,15 @@ export default async function Home() {
     tweetIds.map(async (id) => {
       const tweet = await getTweet(id);
       return { id, tweet };
-    })
+    }),
   );
-  const tweetsMap = Object.fromEntries(tweets.map(t => [t.id, t.tweet]));
+  const tweetsMap = Object.fromEntries(tweets.map((t) => [t.id, t.tweet]));
   return (
-    <main
-      className={`${plusJakartaSans.className} min-h-screen bg-white relative w-full overflow-hidden`}
-    >
+    <main className={`${plusJakartaSans.className} min-h-screen bg-white relative w-full overflow-hidden`}>
       {/* Hero Section */}
       <section className="w-full flex flex-col items-center pt-10 pb-4 gap-12">
         {/* Centered Logo */}
-        <img
-          src="/assets/logoLarge.png"
-          alt="Melian Logo"
-          className="w-40 sm:w-48 md:w-72 lg:w-80 h-auto mb-6"
-        />
+        <img src="/assets/logoLarge.png" alt="Melian Logo" className="w-40 sm:w-48 md:w-72 lg:w-80 h-auto mb-6" />
 
         {/* Horizontal product strip */}
         <div className="w-full overflow-hidden mb-12">
@@ -54,44 +48,30 @@ export default async function Home() {
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
-              h1: ({ children }) => (
-                <h1 className="text-4xl font-bold mb-6 text-gray-900">
-                  {children}
-                </h1>
-              ),
-              h2: ({ children }) => (
-                <h2 className="text-3xl font-semibold mt-8 mb-4 text-gray-800">
-                  {children}
-                </h2>
-              ),
-              h3: ({ children }) => (
-                <h3 className="text-2xl font-semibold mt-6 mb-3 text-gray-800">
-                  {children}
-                </h3>
-              ),
+              h1: ({ children }) => <h1 className="text-4xl font-bold mb-6 text-gray-900">{children}</h1>,
+              h2: ({ children }) => <h2 className="text-3xl font-semibold mt-8 mb-4 text-gray-800">{children}</h2>,
+              h3: ({ children }) => <h3 className="text-2xl font-semibold mt-6 mb-3 text-gray-800">{children}</h3>,
               p: ({ children }) => {
                 // Check if children contains any block elements (divs, articles, etc)
-                const hasBlockElements = Array.isArray(children) 
-                  ? children.some(child => 
-                      child?.props?.className?.includes('my-6') || 
-                      child?.type === 'div' ||
-                      child?.type === 'article')
-                  : children?.props?.className?.includes('my-6');
-                
+                const hasBlockElements = Array.isArray(children)
+                  ? children.some(
+                      (child) =>
+                        child?.props?.className?.includes("my-6") || child?.type === "div" || child?.type === "article",
+                    )
+                  : children?.props?.className?.includes("my-6");
+
                 // If block elements are present, render as div instead of p
                 if (hasBlockElements) {
                   return <div className="mb-4 text-gray-700 leading-relaxed">{children}</div>;
                 }
-                
+
                 return <p className="mb-4 text-gray-700 leading-relaxed">{children}</p>;
               },
               code: ({ children, className }) => {
                 const isInline = !className;
                 if (isInline) {
                   return (
-                    <code className="bg-gray-100 px-2 py-1 rounded text-sm font-mono text-gray-800">
-                      {children}
-                    </code>
+                    <code className="bg-gray-100 px-2 py-1 rounded text-sm font-mono text-gray-800">{children}</code>
                   );
                 }
                 return (
@@ -101,39 +81,25 @@ export default async function Home() {
                 );
               },
               pre: ({ children }) => <pre className="mb-4">{children}</pre>,
-              ul: ({ children }) => (
-                <ul className="mb-4 pl-6 space-y-2">{children}</ul>
-              ),
-              ol: ({ children }) => (
-                <ol className="mb-4 pl-6 space-y-2">{children}</ol>
-              ),
-              li: ({ children }) => (
-                <li className="text-gray-700">{children}</li>
-              ),
+              ul: ({ children }) => <ul className="mb-4 pl-6 space-y-2">{children}</ul>,
+              ol: ({ children }) => <ol className="mb-4 pl-6 space-y-2">{children}</ol>,
+              li: ({ children }) => <li className="text-gray-700">{children}</li>,
               blockquote: ({ children }) => (
                 <blockquote className="border-l-4 border-gray-300 pl-4 italic text-gray-600 my-4">
                   {children}
                 </blockquote>
               ),
               table: ({ children }) => (
-                <table className="w-full border-collapse border border-gray-300 my-4">
-                  {children}
-                </table>
+                <table className="w-full border-collapse border border-gray-300 my-4">{children}</table>
               ),
               th: ({ children }) => (
-                <th className="border border-gray-300 px-4 py-2 bg-gray-50 font-semibold text-left">
-                  {children}
-                </th>
+                <th className="border border-gray-300 px-4 py-2 bg-gray-50 font-semibold text-left">{children}</th>
               ),
-              td: ({ children }) => (
-                <td className="border border-gray-300 px-4 py-2">{children}</td>
-              ),
+              td: ({ children }) => <td className="border border-gray-300 px-4 py-2">{children}</td>,
               a: ({ children, href }) => {
                 const hrefStr = href as string;
                 // Detect Twitter/X status links and embed them
-                const tweetMatch = hrefStr.match(
-                  /^https?:\/\/(?:twitter\.com|x\.com)\/[^/]+\/status\/([0-9]+)/i
-                );
+                const tweetMatch = hrefStr.match(/^https?:\/\/(?:twitter\.com|x\.com)\/[^/]+\/status\/([0-9]+)/i);
                 if (tweetMatch) {
                   const tweetId = tweetMatch[1];
                   const tweet = tweetsMap[tweetId];
@@ -157,20 +123,13 @@ export default async function Home() {
                 }
                 // Default link rendering
                 return (
-                  <a
-                    href={hrefStr}
-                    className="text-blue-600 hover:text-blue-800 underline truncate max-w-2/4"
-                  >
+                  <a href={hrefStr} className="text-blue-600 hover:text-blue-800 underline truncate max-w-2/4">
                     {children}
                   </a>
                 );
               },
               hr: () => <hr className="my-8 border-gray-300" />,
-              strong: ({ children }) => (
-                <strong className="font-semibold text-gray-900">
-                  {children}
-                </strong>
-              ),
+              strong: ({ children }) => <strong className="font-semibold text-gray-900">{children}</strong>,
               em: ({ children }) => <em className="italic">{children}</em>,
               img: ({ src, alt }) => {
                 const srcStr = src as string;
@@ -209,26 +168,16 @@ export default async function Home() {
           >
             {/* Header with logo */}
             <div className="flex items-center justify-center space-x-2 mb-3">
-              <img
-                src="/assets/logoSmall.png"
-                alt="Melian Logo"
-                className="w-8 h-8 rounded-full"
-              />
+              <img src="/assets/logoSmall.png" alt="Melian Logo" className="w-8 h-8 rounded-full" />
               <div className="text-3xl font-semibold">Get the App</div>
             </div>
 
             {/* Description */}
-            <div className="text-lg text-gray-600 mb-4">
-              Effortless shopping
-            </div>
+            <div className="text-lg text-gray-600 mb-4">Effortless shopping</div>
 
             {/* App Store Badge */}
             <div className="flex justify-center">
-              <img
-                src="/assets/appStoreBlack.svg"
-                alt="Download on the App Store"
-                className="h-8 w-auto"
-              />
+              <img src="/assets/appStoreBlack.svg" alt="Download on the App Store" className="h-8 w-auto" />
             </div>
           </a>
         </div>
@@ -244,11 +193,7 @@ export default async function Home() {
         >
           {/* Header with logo */}
           <div className="flex items-center space-x-2 mb-2">
-            <img
-              src="/assets/logoSmall.png"
-              alt="Melian Logo"
-              className="w-8 h-8 rounded-full"
-            />
+            <img src="/assets/logoSmall.png" alt="Melian Logo" className="w-8 h-8 rounded-full" />
             <div className="text-2xl font-semibold">Get the App</div>
           </div>
 
@@ -257,11 +202,7 @@ export default async function Home() {
 
           {/* App Store Badge */}
           <div>
-            <img
-              src="/assets/appStoreBlack.svg"
-              alt="Download on the App Store"
-              className="h-8 w-auto"
-            />
+            <img src="/assets/appStoreBlack.svg" alt="Download on the App Store" className="h-8 w-auto" />
           </div>
         </a>
       </div>

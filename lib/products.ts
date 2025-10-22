@@ -1,4 +1,4 @@
-import { ProductPage } from "@/types/product";
+import type { ProductPage } from "@/types/product";
 
 /**
  * Fetch a single product by its identifier from the backend service.
@@ -14,7 +14,7 @@ export async function fetchProduct(productId: string): Promise<ProductPage | nul
       cache: "no-store",
       method: "GET",
       headers: {
-        'Authorization': 'Bearer no-token-secret',
+        Authorization: "Bearer no-token-secret",
       },
     });
 
@@ -38,7 +38,7 @@ export async function fetchRelatedProducts(productId: string, limit = 20): Promi
       cache: "no-store",
       method: "GET",
       headers: {
-        'Authorization': 'Bearer no-token-secret',
+        Authorization: "Bearer no-token-secret",
       },
     });
 
@@ -49,4 +49,4 @@ export async function fetchRelatedProducts(productId: string, limit = 20): Promi
   } catch {
     return null;
   }
-} 
+}
