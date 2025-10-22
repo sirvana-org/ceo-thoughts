@@ -1,4 +1,4 @@
-export interface OutfitImage {
+interface OutfitImage {
   url: string;
   width: number;
   height: number;
@@ -14,7 +14,7 @@ export interface OutfitImage {
   }[];
 }
 
-export interface OutfitUser {
+interface OutfitUser {
   id: string;
   username: string;
   displayName: string;
