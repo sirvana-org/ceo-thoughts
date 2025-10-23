@@ -8,6 +8,7 @@ const config: Config = {
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./features/**/*.{js,ts,jsx,tsx,mdx}",
     "*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
@@ -153,7 +154,7 @@ const config: Config = {
   },
   plugins: [
     require("tailwindcss-animate"),
-    plugin(({ addComponents, theme }) => {
+    plugin(({ addComponents, theme }: { addComponents: any; theme: any }) => {
       addComponents({
         ".headline-large": {
           fontSize: "56px",
@@ -181,12 +182,20 @@ const config: Config = {
           lineHeight: "28px",
           fontWeight: "500",
           fontFamily: theme("fontFamily.plusJakartaSansMedium"),
+          "@screen lg": {
+            fontSize: "40px",
+            lineHeight: "44px",
+          },
         },
         ".subhead-medium": {
           fontSize: "18px",
           lineHeight: "24px",
           fontWeight: "500",
           fontFamily: theme("fontFamily.plusJakartaSansMedium"),
+          "@screen lg": {
+            fontSize: "24px",
+            lineHeight: "28px",
+          },
         },
         ".subhead-small": {
           fontSize: "16px",

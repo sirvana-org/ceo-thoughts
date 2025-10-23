@@ -19,6 +19,7 @@
     "react": "^19",
     "react-dom": "^19",
     "react-markdown": "latest",
+    "react-masonry-css": "^1.0.16",
     "react-tweet": "^3.2.2",
     "remark-gfm": "latest",
     "tailwind-merge": "^3.3.1",

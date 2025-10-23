@@ -6,6 +6,8 @@ export interface RelatedProduct {
   image_url?: string;
   name?: string;
   price?: number;
+  width?: number;
+  height?: number;
 }
 
 export const productQueries = {

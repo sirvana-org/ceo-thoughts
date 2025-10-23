@@ -1,10 +1,26 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { getQueryClient } from "@/app/get-query-client";
-import { AppStoreButtons } from "./app-store-buttons";
+import { Button } from "@/components/ui/button";
 import { ProductImageGallery } from "./product-image-gallery";
 import { ProductInfo } from "./product-info";
 import { fetchProduct, fetchRelatedProducts, productQueries } from "./product-queries";
 import { RelatedProducts } from "./related-products";
+
+const MobileBuyButton = () => {
+  return (
+    <div className="block lg:hidden bg-white border-t border-gray-200 p-4 fixed bottom-0 left-0 right-0 z-50">
+      <Button asChild variant="primary" size="lg" className="w-full">
+        <a href="https://apps.apple.com/us/app/melian/id6738385324" target="_blank" rel="noopener noreferrer">
+          <span>Download App</span>
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-label="Arrow right">
+            <title>Arrow right</title>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
+      </Button>
+    </div>
+  );
+};
 
 export default async function ProductDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -41,7 +57,7 @@ export default async function ProductDetailsPage({ params }: { params: Promise<{
           <RelatedProducts productId={id} />
         </div>
 
-        <AppStoreButtons />
+        <MobileBuyButton />
       </div>
     </HydrationBoundary>
   );
