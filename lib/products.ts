@@ -15,7 +15,7 @@ interface RelatedProduct {
 export async function fetchProduct(productId: string): Promise<ProductPage | null> {
   if (!productId) return null;
 
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/products/${productId}?product=yes`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/products/ready/${productId}`;
   try {
     const res = await fetch(url, {
       cache: "no-store",
@@ -34,10 +34,14 @@ export async function fetchProduct(productId: string): Promise<ProductPage | nul
   }
 }
 
-export async function fetchRelatedProducts(productId: string, limit = 20): Promise<RelatedProduct[] | null> {
+export async function fetchRelatedProducts(
+  productId: string,
+  limit = 20,
+  offset = 0,
+): Promise<{ data: RelatedProduct[]; total: number } | null> {
   if (!productId) return null;
 
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/products/${productId}/related?limit=${limit}`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/products/ready/related/${productId}?limit=${limit}&offset=${offset}`;
   try {
     const res = await fetch(url, {
       cache: "no-store",
@@ -50,7 +54,7 @@ export async function fetchRelatedProducts(productId: string, limit = 20): Promi
     if (!res.ok) return null;
 
     const data = await res.json();
-    return data.data || [];
+    return { data: data.data || [], total: data.total || 0 };
   } catch {
     return null;
   }
