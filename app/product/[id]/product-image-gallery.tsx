@@ -10,21 +10,22 @@ interface ProductImageGalleryProps {
 }
 
 export function ProductImageGallery({ productId }: ProductImageGalleryProps) {
-  const { data: product } = useQuery({
+  const { data } = useQuery({
     queryKey: productQueries.detail({ id: productId }),
     queryFn: fetchProduct,
   });
+
+  const product = data?.product;
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   const currentImage = product?.images[selectedImageIndex] || product?.images[0];
 
-  // Check if image is landscape (wider than tall)
   const isLandscape = currentImage?.width && currentImage?.height && currentImage.width > currentImage.height;
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="relative aspect-[3/4] bg-transparent border border-gray-300 rounded-3xl overflow-hidden">
+      <div className="relative aspect-[3/4] border border-neutral-graySecondary rounded-3xl overflow-hidden">
         {currentImage && (
           <Image
             src={currentImage.url}
@@ -45,10 +46,10 @@ export function ProductImageGallery({ productId }: ProductImageGalleryProps) {
                 key={img.url}
                 type="button"
                 onClick={() => setSelectedImageIndex(idx)}
-                className={`relative flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
+                className={`relative flex-shrink-0 w-20 h-20 rounded-2xl overflow-hidden border transition-all ${
                   selectedImageIndex === idx
-                    ? "border-gray-900 ring-2 ring-gray-900"
-                    : "border-gray-200 hover:border-gray-400"
+                    ? "border-neutral-grayPrimary border-2"
+                    : "border-neutral-graySecondary hover:border-neutral-grayPrimary"
                 }`}
               >
                 <Image

@@ -3,7 +3,7 @@ import { getQueryClient } from "@/app/get-query-client";
 import { Button } from "@/components/ui/button";
 import { ProductImageGallery } from "./product-image-gallery";
 import { ProductInfo } from "./product-info";
-import { fetchProduct, fetchRelatedProducts, productQueries } from "./product-queries";
+import { fetchProduct, fetchRelatedProducts, fetchStoreProducts, productQueries } from "./product-queries";
 import { RelatedProducts } from "./related-products";
 
 const MobileBuyButton = () => {
@@ -26,23 +26,27 @@ export default async function ProductDetailsPage({ params }: { params: Promise<{
   const { id } = await params;
   const queryClient = getQueryClient();
 
+  const productData = await queryClient.fetchQuery({
+    queryKey: productQueries.detail({ id }),
+    queryFn: fetchProduct,
+  });
+
   await Promise.all([
-    queryClient.prefetchQuery({
-      queryKey: productQueries.detail({ id }),
-      queryFn: fetchProduct,
-    }),
     queryClient.prefetchInfiniteQuery({
       queryKey: productQueries.relatedList({ id }),
       queryFn: fetchRelatedProducts,
       initialPageParam: 0,
       getNextPageParam: (lastPage: Awaited<ReturnType<typeof fetchRelatedProducts>>) => {
-        if (!lastPage) return undefined;
-        if (lastPage.data.length < lastPage.total) {
-          return lastPage.data.length;
-        }
-        return undefined;
+        if (!lastPage || lastPage.length === 0) return undefined;
+        return lastPage.length < 20 ? undefined : 20;
       },
     }),
+    productData?.product?.storeId
+      ? queryClient.prefetchQuery({
+          queryKey: productQueries.storeProducts(productData.product.storeId),
+          queryFn: fetchStoreProducts,
+        })
+      : Promise.resolve(),
   ]);
 
   return (

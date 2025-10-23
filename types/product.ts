@@ -18,7 +18,8 @@ export type ProductPage = {
     width?: number;
     height?: number;
   }[];
-  storeLogo: string;
-  storeName: string;
+  storeLogo: string | null;
+  storeName: string | null;
   isLiked: boolean;
+  collectionIds: string[];
 };

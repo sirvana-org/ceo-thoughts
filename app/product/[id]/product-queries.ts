@@ -8,6 +8,14 @@ export interface RelatedProduct {
   price?: number;
   width?: number;
   height?: number;
+  store_id?: string;
+  store_name?: string;
+  store_url?: string;
+}
+
+interface ProductWithRelatedResponse {
+  product?: ProductPage;
+  relatedProducts: RelatedProduct[];
 }
 
 export const productQueries = {
@@ -20,14 +28,16 @@ export const productQueries = {
   relatedLists: () => [{ ...productQueries.all[0], entity: "related" }] as const,
 
   relatedList: ({ id }: { id: string }) => [{ ...productQueries.relatedLists()[0], id }] as const,
+
+  storeProducts: (storeId: string) => [{ ...productQueries.all[0], entity: "storeProducts", storeId }] as const,
 };
 
 export const fetchProduct = async ({
   queryKey: [{ id }],
-}: QueryFunctionContext<ReturnType<typeof productQueries.detail>>): Promise<ProductPage | null> => {
+}: QueryFunctionContext<ReturnType<typeof productQueries.detail>>): Promise<ProductWithRelatedResponse | null> => {
   if (!id) return null;
 
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/products/ready/${id}`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/products/${encodeURIComponent(id)}?related=true&product=true&relatedLimit=20&relatedOffset=0`;
   try {
     const res = await fetch(url, {
       cache: "no-store",
@@ -39,7 +49,7 @@ export const fetchProduct = async ({
 
     if (!res.ok) return null;
 
-    const data = (await res.json()) as ProductPage;
+    const data = (await res.json()) as ProductWithRelatedResponse;
     return data;
   } catch {
     return null;
@@ -49,17 +59,13 @@ export const fetchProduct = async ({
 export const fetchRelatedProducts = async ({
   queryKey: [{ id }],
   pageParam,
-}: QueryFunctionContext<ReturnType<typeof productQueries.relatedList>, number>): Promise<{
-  data: RelatedProduct[];
-  total: number;
-} | null> => {
-  if (!id) return null;
+}: QueryFunctionContext<ReturnType<typeof productQueries.relatedList>, number>): Promise<RelatedProduct[]> => {
+  if (!id) return [];
 
   const limit = 20;
   const offset = pageParam;
 
-  console.log(id, limit, offset);
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/products/${encodeURIComponent(id)}?related=true&relatedLimit=${limit}&relatedOffset=${offset}`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/products/related/${encodeURIComponent(id)}?limit=${limit}&offset=${offset}`;
   try {
     const res = await fetch(url, {
       cache: "no-store",
@@ -69,11 +75,36 @@ export const fetchRelatedProducts = async ({
       },
     });
 
-    if (!res.ok) return null;
+    if (!res.ok) return [];
 
-    const data = await res.json();
-    return { data: data.relatedProducts || [], total: data.relatedProductsTotal || 0 };
+    const data = (await res.json()) as RelatedProduct[];
+    return data;
   } catch {
-    return null;
+    return [];
+  }
+};
+
+export const fetchStoreProducts = async ({
+  queryKey: [{ storeId }],
+}: QueryFunctionContext<ReturnType<typeof productQueries.storeProducts>>): Promise<RelatedProduct[]> => {
+  if (!storeId) return [];
+
+  const limit = 10;
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/products/ready?size=${limit}&from=0&store_id=${storeId}`;
+  try {
+    const res = await fetch(url, {
+      cache: "no-store",
+      method: "GET",
+      headers: {
+        Authorization: "Bearer no-token-secret",
+      },
+    });
+
+    if (!res.ok) return [];
+
+    const response = await res.json();
+    return response.data || [];
+  } catch {
+    return [];
   }
 };

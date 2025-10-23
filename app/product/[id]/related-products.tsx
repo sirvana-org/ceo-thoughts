@@ -18,12 +18,9 @@ export function RelatedProducts({ productId }: RelatedProductsProps) {
     queryKey: productQueries.relatedList({ id: productId }),
     queryFn: fetchRelatedProducts,
     getNextPageParam: (lastPage, allPages) => {
-      if (!lastPage) return undefined;
-      const currentTotal = allPages.reduce((sum, page) => sum + (page?.data.length || 0), 0);
-      if (currentTotal < lastPage.total) {
-        return currentTotal;
-      }
-      return undefined;
+      if (!lastPage || lastPage.length === 0) return undefined;
+      const fetchedSoFar = allPages.reduce((acc, page) => acc + page.length, 0);
+      return lastPage.length < 20 ? undefined : fetchedSoFar;
     },
     initialPageParam: 0,
   });
@@ -51,7 +48,7 @@ export function RelatedProducts({ productId }: RelatedProductsProps) {
     };
   }, [fetchNextPage, hasNextPage, isLoading, isFetchingNextPage]);
 
-  const allProducts = data?.pages.flatMap((page) => page?.data || []) || [];
+  const allProducts = data?.pages.flatMap((page) => page || []) || [];
 
   if (isLoading) {
     return (
