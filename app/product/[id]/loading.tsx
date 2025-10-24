@@ -1,3 +1,10 @@
+const THUMB_SKELETON_KEYS = ["thumb-1", "thumb-2", "thumb-3", "thumb-4"] as const;
+const BADGE_SKELETON_KEYS = ["badge-1", "badge-2", "badge-3", "badge-4"] as const;
+const GRID_SKELETON_ITEMS = Array.from({ length: 10 }, (_, index) => ({
+  id: `grid-${index + 1}`,
+  aspectRatio: index % 3 === 0 ? "3/4" : index % 2 === 0 ? "4/5" : "1/1",
+}));
+
 export default function ProductLoading() {
   return (
     <div className="min-h-screen bg-white relative pb-24 lg:pb-8">
@@ -9,9 +16,9 @@ export default function ProductLoading() {
 
             {/* Thumbnails Skeleton */}
             <div className="flex gap-2 overflow-x-auto pb-2">
-              {[...Array(4)].map((_, idx) => (
+              {THUMB_SKELETON_KEYS.map((key) => (
                 <div
-                  key={idx}
+                  key={key}
                   className="relative flex-shrink-0 w-20 h-20 rounded-2xl border border-neutral-graySecondary bg-neutral-graySecondary animate-pulse"
                 />
               ))}
@@ -39,11 +46,8 @@ export default function ProductLoading() {
 
             {/* Badges */}
             <div className="flex flex-wrap gap-3 pt-4">
-              {[...Array(4)].map((_, idx) => (
-                <div
-                  key={idx}
-                  className="h-8 w-20 bg-neutral-graySecondary animate-pulse rounded-full"
-                />
+              {BADGE_SKELETON_KEYS.map((key) => (
+                <div key={key} className="h-8 w-20 bg-neutral-graySecondary animate-pulse rounded-full" />
               ))}
             </div>
 
@@ -58,11 +62,11 @@ export default function ProductLoading() {
 
           {/* Masonry Grid Skeleton - Mobile First */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {[...Array(10)].map((_, idx) => (
-              <div key={idx} className="flex flex-col gap-2">
+            {GRID_SKELETON_ITEMS.map((item) => (
+              <div key={item.id} className="flex flex-col gap-2">
                 <div
                   className="w-full bg-neutral-graySecondary animate-pulse rounded-2xl"
-                  style={{ aspectRatio: idx % 3 === 0 ? '3/4' : idx % 2 === 0 ? '4/5' : '1/1' }}
+                  style={{ aspectRatio: item.aspectRatio }}
                 />
                 <div className="h-4 w-3/4 bg-neutral-graySecondary animate-pulse rounded" />
                 <div className="h-4 w-1/2 bg-neutral-graySecondary animate-pulse rounded" />

@@ -1,7 +1,7 @@
 "use client";
 
 import Masonry from "react-masonry-css";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 
 interface SpinnerProps {
   size?: "sm" | "md" | "lg";
@@ -28,7 +28,7 @@ interface MasonryItem {
 
 interface MasonryListProps<T extends MasonryItem> {
   items: T[];
-  renderItem: (item: T, index: number) => React.ReactNode;
+  renderItem: (item: T, index: number) => ReactNode;
   className?: string;
   onLoadMore?: () => void;
   isLoadingMore?: boolean;

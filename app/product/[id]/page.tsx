@@ -1,4 +1,5 @@
 import { dehydrate, HydrationBoundary, type QueryFunctionContext } from "@tanstack/react-query";
+import { notFound } from "next/navigation";
 import { getQueryClient } from "@/app/get-query-client";
 import { Button } from "@/components/ui/button";
 import { fetchProduct, fetchRelatedProducts, fetchStoreProducts } from "@/lib/products";
@@ -6,7 +7,6 @@ import { ProductImageGallery } from "./product-image-gallery";
 import { ProductInfo } from "./product-info";
 import { productQueries } from "./product-queries";
 import { RelatedProducts } from "./related-products";
-import { notFound } from "next/navigation";
 
 const MobileBuyButton = () => {
   return (

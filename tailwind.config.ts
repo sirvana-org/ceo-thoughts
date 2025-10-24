@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import type { PluginAPI } from "tailwindcss/types/config";
 
 const plugin = require("tailwindcss/plugin");
 
@@ -154,7 +155,8 @@ const config: Config = {
   },
   plugins: [
     require("tailwindcss-animate"),
-    plugin(({ addComponents, theme }: { addComponents: any; theme: any }) => {
+    plugin((api: PluginAPI) => {
+      const { addComponents, theme } = api;
       addComponents({
         ".headline-large": {
           fontSize: "56px",
@@ -169,6 +171,13 @@ const config: Config = {
           fontWeight: "500",
           letterSpacing: "-1px",
           fontFamily: theme("fontFamily.plusJakartaSansMedium"),
+          "@screen lg": {
+            fontSize: "56px",
+            lineHeight: "58px",
+            fontWeight: "500",
+            letterSpacing: "-3px",
+            fontFamily: theme("fontFamily.plusJakartaSansMedium"),
+          },
         },
         ".headline-small": {
           fontSize: "26px",

@@ -81,11 +81,13 @@ export function RelatedProducts({ productId }: RelatedProductsProps) {
             imageUrl={relatedProduct.image_url}
             name={relatedProduct.name}
             price={relatedProduct.price}
+            priceCurrency={relatedProduct.price_currency}
+            brand={relatedProduct.brand}
             width={relatedProduct.width}
             height={relatedProduct.height}
           />
         )}
-        onLoadMore={fetchNextPage}
+        onLoadMore={hasNextPage ? fetchNextPage : undefined}
         isLoadingMore={isFetchingNextPage}
       />
     </div>

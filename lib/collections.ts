@@ -18,6 +18,29 @@ export interface CollectionProductsPage {
   total?: number;
 }
 
+export interface CollectionUser {
+  id: string;
+  name: string;
+  profilePicture: string;
+}
+
+export interface Collection {
+  id: string;
+  name: string;
+  subtitle?: string;
+  cover?: string;
+  isPrivate: boolean;
+  createdAt: string;
+  previewImages?: string[];
+  isBookmarked: boolean;
+  isOwner: boolean;
+  storesCount: number;
+  productsCount: number;
+  isLiked: boolean;
+  likesCount: number;
+  commentsCount: number;
+}
+
 export async function fetchCollection(collectionId: string) {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/collections/ready/${collectionId}`, {
@@ -39,7 +62,17 @@ export async function fetchCollection(collectionId: string) {
   }
 }
 
-export async function fetchCollectionWithUser(collectionId: string) {
+export interface CollectionWithUser {
+  collection: Collection;
+  user: {
+    userId: string;
+    userName: string;
+    userProfilePicture: string;
+    userIsOwner: boolean;
+  } | null;
+}
+
+export async function fetchCollectionWithUser(collectionId: string): Promise<CollectionWithUser | null> {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/collections/ready/${collectionId}`, {
       cache: "no-store",
@@ -53,14 +86,38 @@ export async function fetchCollectionWithUser(collectionId: string) {
     }
 
     const data = await response.json();
-    return data;
+
+    // Map user field into correct shape or null
+    const user =
+      data.user && typeof data.user === "object"
+        ? {
+            userId: data.user.userId,
+            userName: data.user.userName,
+            userProfilePicture: data.user.userProfilePicture,
+            userIsOwner: data.user.userIsOwner,
+          }
+        : null;
+
+    // Attach user to the collection object
+    const collectionWithUser: CollectionWithUser = {
+      collection: {
+        ...data.collection,
+      },
+      user,
+    };
+
+    return collectionWithUser;
   } catch (error) {
     console.error("Error fetching collection with user:", error);
     return null;
   }
 }
 
-export async function fetchCollectionProducts(collectionId: string, limit = 24, offset = 0): Promise<CollectionProductsPage> {
+export async function fetchCollectionProducts(
+  collectionId: string,
+  limit = 24,
+  offset = 0,
+): Promise<CollectionProductsPage> {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/collections/ready/${collectionId}/products?limit=${limit}&offset=${offset}`,

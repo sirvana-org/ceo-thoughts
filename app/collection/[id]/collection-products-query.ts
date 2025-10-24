@@ -1,10 +1,8 @@
-import { type QueryFunctionContext } from "@tanstack/react-query";
+import type { QueryFunctionContext } from "@tanstack/react-query";
 import { fetchCollectionProducts, type CollectionProductsPage } from "@/lib/collections";
-import { collectionQueries } from "./collection-queries";
+import type { CollectionProductsQueryKey } from "./collection-queries";
 
 export const COLLECTION_PRODUCTS_PAGE_SIZE = 24;
-
-export type CollectionProductsQueryKey = ReturnType<typeof collectionQueries.products>;
 
 export const collectionProductsQueryFn = ({
   queryKey,

@@ -1,12 +1,13 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Script from "next/script";
 import { getQueryClient } from "@/app/get-query-client";
 import { fetchCollection, fetchCollectionWithUser } from "@/lib/collections";
 import { CollectionHeader } from "./collection-header";
 import { CollectionProducts } from "./collection-products";
-import { collectionQueries } from "./collection-queries";
 import { collectionProductsQueryFn, getCollectionProductsNextPageParam } from "./collection-products-query";
+import { collectionQueries } from "./collection-queries";
 
 interface PageProps {
   params: {
@@ -124,7 +125,10 @@ export default async function CollectionPage({ params }: PageProps) {
     queryKey: collectionQueries.products({ id }),
     queryFn: collectionProductsQueryFn,
     initialPageParam: 0,
-    getNextPageParam: (lastPage, allPages) => getCollectionProductsNextPageParam(lastPage, allPages),
+    getNextPageParam: (
+      lastPage: Awaited<ReturnType<typeof collectionProductsQueryFn>>,
+      allPages: Awaited<ReturnType<typeof collectionProductsQueryFn>>[],
+    ) => getCollectionProductsNextPageParam(lastPage, allPages),
   });
 
   const { collection } = collectionData;
@@ -135,7 +139,7 @@ export default async function CollectionPage({ params }: PageProps) {
     "@id": `https://melian.com/collection/${collection.id}`,
     name: collection.name,
     description:
-      collection.description ||
+      collection.subtitle ||
       `A curated collection featuring ${collection.storesCount || 0} stores and ${collection.productsCount || 0} products`,
     url: `https://melian.com/collection/${collection.id}`,
     identifier: collection.id,
@@ -143,59 +147,16 @@ export default async function CollectionPage({ params }: PageProps) {
     dateCreated: collection.createdAt,
   };
 
-  const appStoreUrl = "https://apps.apple.com/us/app/melian/id6738385324";
-
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <>
-        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Required for JSON-LD structured data */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
-        />
+      <Script id={`collection-${collection.id}-jsonld`} type="application/ld+json" strategy="beforeInteractive">
+        {JSON.stringify(structuredData).replace(/</g, "\\u003c")}
+      </Script>
 
-        <div className="min-h-screen bg-white relative">
-          <CollectionHeader collectionId={collection.id} />
-
-          <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 py-8 md:py-12">
-            <CollectionProducts collectionId={collection.id} />
-          </div>
-
-          <div className="fixed bottom-6 left-6 z-50 hidden lg:block">
-            <a
-              href={appStoreUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-white/90 backdrop-blur-md shadow-xl rounded-2xl p-6 block hover:bg-white transition-colors border border-gray-200"
-            >
-              <div className="flex items-center space-x-3 mb-2">
-                <img src="/assets/logoSmall.png" alt="Melian Logo" width={40} height={40} className="rounded-full" />
-                <div className="text-2xl font-semibold text-gray-900">Get the App</div>
-              </div>
-
-              <div className="text-sm text-gray-600 mb-3">Effortless shopping</div>
-
-              <div>
-                <img src="/assets/appStoreBlack.svg" alt="Download on the App Store" width={120} height={40} />
-              </div>
-            </a>
-          </div>
-
-          <div className="block lg:hidden bg-white border-t border-gray-200 p-4 fixed bottom-0 left-0 right-0 z-50">
-            <a
-              href={appStoreUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-gray-900 text-white rounded-xl px-6 py-4 flex items-center justify-center gap-3 w-full font-semibold hover:bg-gray-800 transition-colors"
-            >
-              <span>Download App</span>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" role="img" aria-label="Arrow right">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </a>
-          </div>
-        </div>
-      </>
+      <div className="flex flex-col gap-8 md:gap-12 justify-start p-4 md:p-8 max-w-7xl mx-auto">
+        <CollectionHeader collectionId={collection.id} />
+        <CollectionProducts collectionId={collection.id} />
+      </div>
     </HydrationBoundary>
   );
 }

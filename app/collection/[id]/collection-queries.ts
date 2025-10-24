@@ -9,3 +9,6 @@ export const collectionQueries = {
 
   products: ({ id }: { id: string }) => [{ ...collectionQueries.productLists()[0], id }] as const,
 };
+
+export type CollectionDetailQueryKey = ReturnType<typeof collectionQueries.detail>;
+export type CollectionProductsQueryKey = ReturnType<typeof collectionQueries.products>;

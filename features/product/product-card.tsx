@@ -9,13 +9,20 @@ interface ProductCardProps {
   imageUrl?: string;
   name?: string;
   price?: number;
+  priceCurrency?: string;
   brand?: string;
   width?: number;
   height?: number;
 }
 
-export function ProductCard({ productId, imageUrl, name, price, brand, width, height }: ProductCardProps) {
+function formatPrice(price: number, currency?: string) {
+  const symbol = currency ?? "$";
+  return `${symbol}${price.toFixed(2)}`;
+}
+
+export function ProductCard({ productId, imageUrl, name, price, priceCurrency, brand, width, height }: ProductCardProps) {
   const aspectRatio = width && height && height > 0 ? width / height : undefined;
+  const shouldShowPrice = typeof price === "number" && Number.isFinite(price);
 
   return (
     <Link href={`/product/${productId}`} className="cursor-pointer">
@@ -38,9 +45,9 @@ export function ProductCard({ productId, imageUrl, name, price, brand, width, he
                 {brand}
               </Badge>
             )}
-            {price && (
+            {shouldShowPrice && (
               <Badge variant="secondary" className="text-xs text-neutral-grayPrimary group-hover:opacity-20 transition-opacity duration-300">
-                ${typeof price === "number" ? price.toFixed(2) : price}
+                {formatPrice(price, priceCurrency)}
               </Badge>
             )}
           </div>
@@ -54,4 +61,3 @@ export function ProductCard({ productId, imageUrl, name, price, brand, width, he
     </Link>
   );
 }
-
