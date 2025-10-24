@@ -41,7 +41,7 @@ export function ProductCard({ productId, imageUrl, name, price, priceCurrency, b
         <div className="absolute bottom-0 left-0 right-0 p-2 flex flex-col gap-1">
           <div className="flex flex-row gap-2">
             {brand && (
-              <Badge variant="secondary" className="text-xs text-neutral-grayPrimary rounded-lg group-hover:opacity-20 transition-opacity duration-300">
+              <Badge variant="secondary" className="text-xs text-neutral-grayPrimary rounded-lg max-w-[50%] block overflow-hidden text-ellipsis whitespace-nowrap group-hover:opacity-20 transition-opacity duration-300">
                 {brand}
               </Badge>
             )}

@@ -170,3 +170,65 @@ export async function fetchCollectionProducts(
     };
   }
 }
+
+export interface UserCollection {
+  id: string;
+  name: string;
+  subtitle?: string;
+  cover?: string | null;
+  is_private: boolean;
+  user_id: string;
+  isAdded: boolean;
+  previewImages: string[];
+  isOwner: boolean;
+  ownerUserName: string | null;
+  ownerProfilePicture?: string | null;
+}
+
+export interface UserCollectionsPage {
+  collections: UserCollection[];
+  limit: number;
+  offset: number;
+}
+
+export async function fetchUserCollections(
+  userId: string,
+  limit = 21,
+  offset = 0,
+): Promise<UserCollectionsPage> {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/collections/ready/user/${userId}?limit=${limit}&offset=${offset}`,
+      {
+        cache: "no-store",
+        headers: {
+          Authorization: "Bearer no-token-secret",
+        },
+      },
+    );
+
+    if (!response.ok) {
+      return {
+        collections: [],
+        limit,
+        offset,
+      };
+    }
+
+    const data = await response.json();
+    const collections = Array.isArray(data?.collections) ? (data.collections as UserCollection[]) : [];
+
+    return {
+      collections,
+      limit,
+      offset,
+    };
+  } catch (error) {
+    console.error("Error fetching user collections:", error);
+    return {
+      collections: [],
+      limit,
+      offset,
+    };
+  }
+}

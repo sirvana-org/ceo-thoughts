@@ -222,7 +222,7 @@ const config: Config = {
           fontSize: "18px",
           lineHeight: "24px",
           fontWeight: "500",
-          fontFamily: theme("fontFamily.plusJakartaSansRegular"),
+          fontFamily: theme("fontFamily.plusJakartaSansMedium"),
         },
       });
     }),

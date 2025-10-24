@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import Script from "next/script";
+import { fetchUserCollections } from "@/lib/collections";
 import { fetchExternalProfile } from "@/lib/users";
-import type { ExternalProfile } from "@/types/user";
+import { AppStoreHeader } from "./app-store-header";
+import { ExternalProfileCollectionsServer } from "./external-profile-collections-server";
+import { buildExternalProfileStructuredData } from "./external-profile-structured-data";
 
 interface PageProps {
   params: {
@@ -12,34 +16,7 @@ interface PageProps {
 
 export const revalidate = 60;
 
-const APP_STORE_URL = "https://apps.apple.com/us/app/melian/id6738385324";
 const MELIAN_SITE_URL = "https://melian.com";
-
-const getDisplayName = (profile: ExternalProfile | null) => {
-  if (!profile) return undefined;
-  return profile.name?.trim() || profile.userName || profile.username || undefined;
-};
-
-const getHandle = (profile: ExternalProfile | null) => {
-  if (!profile) return undefined;
-  return profile.userName || profile.username || undefined;
-};
-
-const getInitials = (profile: ExternalProfile | null) => {
-  const displayName = getDisplayName(profile);
-  if (!displayName) {
-    return "M";
-  }
-
-  const parts = displayName.split(" ").filter(Boolean);
-  if (parts.length === 1) {
-    return parts[0][0]?.toUpperCase() ?? "M";
-  }
-
-  const first = parts[0]?.[0];
-  const last = parts[parts.length - 1]?.[0];
-  return `${first ?? ""}${last ?? ""}`.toUpperCase() || "M";
-};
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { userId } = await params;
@@ -56,8 +33,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  const displayName = getDisplayName(profile) ?? "Melian user";
-  const handle = getHandle(profile);
+  const displayName = profile.name ?? "Melian user";
+  const handle = profile.userName ?? "Melian user";
   const description = `${displayName} on Melian. Follow along and save the finds.`;
   const canonical = `${MELIAN_SITE_URL}/external-profile/${profile.userId ?? profile.id}`;
 
@@ -116,72 +93,73 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
+const getInitials = ({ name }: { name: string | null }) => {
+  if (!name) {
+    return "M";
+  }
+
+  const parts = name.split(" ").filter(Boolean);
+  if (parts.length === 1) {
+    return parts[0][0]?.toUpperCase() ?? "M";
+  }
+
+  const first = parts[0]?.[0];
+  const last = parts[parts.length - 1]?.[0];
+  return `${first ?? ""}${last ?? ""}`.toUpperCase() || "M";
+};
+
 export default async function ExternalProfilePage({ params }: PageProps) {
   const { userId } = await params;
+
   const profile = await fetchExternalProfile(userId);
 
   if (!profile) {
     notFound();
   }
 
-  const displayName = getDisplayName(profile);
-  const handle = getHandle(profile);
-  const normalizedHandle = handle ? (handle.startsWith("@") ? handle : `@${handle}`) : undefined;
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "@id": `${MELIAN_SITE_URL}/external-profile/${profile.userId ?? profile.id}`,
-    name: displayName,
-    alternateName: normalizedHandle,
-    description: profile.bio || `${displayName ?? "This Melian member"} keeps a Melian closet of fashion finds.`,
-    image: profile.picture ?? undefined,
-    url: `${MELIAN_SITE_URL}/external-profile/${profile.userId ?? profile.id}`,
-  };
+  const collectionsData = await fetchUserCollections(userId, 50, 0);
 
-  const jsonLd = JSON.stringify(structuredData);
-  const sanitizedJsonLd = jsonLd
-    .replace(/<\/(script)/gi, "\\u003C/$1")
-    .replace(/</g, "\\u003C")
-    .replace(/>/g, "\\u003E")
-    .replace(/&/g, "\\u0026")
-    .replace(/\u2028/g, "\\u2028")
-    .replace(/\u2029/g, "\\u2029");
+  const { profileId, sanitizedJsonLd } = buildExternalProfileStructuredData(profile, userId, MELIAN_SITE_URL);
 
   return (
     <>
-      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Required for JSON-LD structured data */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: sanitizedJsonLd }} />
-      <div className="min-h-screen bg-white flex items-center justify-center py-16 px-6 md:px-8 lg:px-12">
-        <div className="bg-white border border-gray-200 rounded-3xl shadow-lg px-12 py-16 flex flex-col items-center gap-8">
-          <div className="relative w-32 h-32 rounded-3xl overflow-hidden bg-gray-50 shadow-md ring-1 ring-gray-200 flex items-center justify-center">
-            {profile.picture ? (
+      <Script id={`external-profile-${profileId}-jsonld`} type="application/ld+json" strategy="beforeInteractive">
+        {sanitizedJsonLd}
+      </Script>
+
+      <AppStoreHeader />
+
+      <div className="min-h-screen flex flex-col items-center p-4 pt-6 md:p-8">
+        {/* Profile Header */}
+        <div className="flex flex-col items-center gap-4 mb-8 md:mb-12">
+          {/* Avatar */}
+          {profile.picture ? (
+            <div className="relative w-[88px] h-[88px] rounded-full overflow-hidden">
               <Image
                 src={profile.picture}
-                alt={displayName ? `${displayName}'s avatar` : "Melian profile avatar"}
+                alt={profile.name ? `${profile.name}'s avatar` : "Melian profile avatar"}
                 fill
                 className="object-cover"
-                sizes="128px"
               />
-            ) : (
-              <span className="text-4xl font-semibold text-gray-600">{getInitials(profile)}</span>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className="w-[88px] h-[88px] rounded-full bg-gray-100 flex items-center justify-center">
+              <span className="text-4xl font-semibold text-gray-600">{getInitials({ name: profile.name })}</span>
+            </div>
+          )}
 
-          <div className="text-center space-y-1">
-            {normalizedHandle ? (
-              <p className="text-sm uppercase tracking-[0.3em] text-gray-500">{normalizedHandle}</p>
-            ) : null}
-            <h1 className="text-3xl font-semibold text-gray-900">{displayName ?? normalizedHandle ?? "Melian User"}</h1>
+          {/* Name and description */}
+          <div className="flex flex-col items-center gap-1">
+            <h1 className="headline-small text-neutral-blackPrimary">{profile.name}</h1>
+            {profile.description && <p className="body-medium text-neutral-blackPrimary">{profile.description}</p>}
           </div>
+        </div>
 
-          <a
-            href={APP_STORE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-gray-900 text-white px-8 py-4 text-lg font-semibold shadow-lg transition-colors hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2"
-          >
-            Download Melian
-          </a>
+        {/* Collections */}
+        <div className="w-full max-w-7xl">
+          <section className="w-full">
+            <ExternalProfileCollectionsServer collections={collectionsData.collections} />
+          </section>
         </div>
       </div>
     </>
