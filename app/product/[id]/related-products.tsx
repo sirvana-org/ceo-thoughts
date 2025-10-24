@@ -72,7 +72,7 @@ export function RelatedProducts({ productId }: RelatedProductsProps) {
 
   return (
     <div className="border-t border-neutral-graySecondary pt-12">
-      <h2 className="subhead-large text-neutral-blackPrimary mb-8">Related Products</h2>
+      <h2 className="subhead-medium text-neutral-blackPrimary mb-8">Related Products</h2>
       <MasonryList
         items={allProducts.map((p) => ({ ...p, id: p.product_id }))}
         renderItem={(relatedProduct) => (

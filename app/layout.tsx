@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type React from "react";
 import "./globals.css";
+import { AppStoreHeader } from "./external-profile/[userId]/app-store-header";
 import Providers from "./providers";
 
 export const metadata: Metadata = {
@@ -11,7 +12,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>
+      <body className="md:px-[200px]">
+        <AppStoreHeader />
         <Providers>{children}</Providers>
       </body>
     </html>

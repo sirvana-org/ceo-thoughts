@@ -20,8 +20,8 @@ export function ProductImageGallery({ productId }: ProductImageGalleryProps) {
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
+  console.log(product);
   const currentImage = product?.images[selectedImageIndex] || product?.images[0];
-
   const isLandscape = currentImage?.width && currentImage?.height && currentImage.width > currentImage.height;
 
   return (
@@ -38,7 +38,7 @@ export function ProductImageGallery({ productId }: ProductImageGalleryProps) {
         )}
       </div>
 
-      {product?.images.length && product?.images.length > 1 && (
+      {product?.images && product?.images.length > 1 && (
         <div className="flex gap-2 overflow-x-auto pb-2">
           {product?.images.map((img, idx) => {
             const isThumbnailLandscape = img.width && img.height && img.width > img.height;

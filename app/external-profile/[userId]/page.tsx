@@ -4,7 +4,6 @@ import { notFound } from "next/navigation";
 import Script from "next/script";
 import { fetchUserCollections } from "@/lib/collections";
 import { fetchExternalProfile } from "@/lib/users";
-import { AppStoreHeader } from "./app-store-header";
 import { ExternalProfileCollectionsServer } from "./external-profile-collections-server";
 import { buildExternalProfileStructuredData } from "./external-profile-structured-data";
 
@@ -126,8 +125,6 @@ export default async function ExternalProfilePage({ params }: PageProps) {
       <Script id={`external-profile-${profileId}-jsonld`} type="application/ld+json" strategy="beforeInteractive">
         {sanitizedJsonLd}
       </Script>
-
-      <AppStoreHeader />
 
       <div className="min-h-screen flex flex-col items-center p-4 pt-6 md:p-8">
         {/* Profile Header */}
