@@ -9,11 +9,16 @@ interface PageProps {
   };
 }
 
+interface StoreProduct {
+  product_id: string;
+  image_url?: string;
+  name?: string;
+  price?: number;
+}
+
 export const revalidate = 60;
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { storeId } = await params;
   const store = await fetchStore(storeId);
 
@@ -29,7 +34,9 @@ export async function generateMetadata({
   }
 
   const title = store.page_title || `${store.name} - Shop Online`;
-  const description = store.description || `Shop at ${store.name}. ${store.verified ? "Verified store" : "Online store"} with ${store.categories ? `products in ${store.categories}` : "quality products"}. Discover amazing deals and products.`;
+  const description =
+    store.description ||
+    `Shop at ${store.name}. ${store.verified ? "Verified store" : "Online store"} with ${store.categories ? `products in ${store.categories}` : "quality products"}. Discover amazing deals and products.`;
   const keywords = store.keywords || `${store.name}, online shopping, ${store.categories || "products"}, deals, shop`;
 
   return {
@@ -47,21 +54,23 @@ export async function generateMetadata({
       locale: "en_US",
       url: store.url || `https://melian.com/stores/${store.id}`,
       siteName: "Sirvana",
-      images: store.logo ? [
-        {
-          url: store.logo,
-          width: 1200,
-          height: 630,
-          alt: `${store.name} logo`,
-        },
-      ] : [
-        {
-          url: "/og-default.jpg",
-          width: 1200,
-          height: 630,
-          alt: "Sirvana",
-        },
-      ],
+      images: store.logo
+        ? [
+            {
+              url: store.logo,
+              width: 1200,
+              height: 630,
+              alt: `${store.name} logo`,
+            },
+          ]
+        : [
+            {
+              url: "/og-default.jpg",
+              width: 1200,
+              height: 630,
+              alt: "Sirvana",
+            },
+          ],
     },
     twitter: {
       card: "summary_large_image",
@@ -90,8 +99,8 @@ export async function generateMetadata({
     },
     other: {
       "revisit-after": "7 days",
-      "rating": "general",
-      "distribution": "global",
+      rating: "general",
+      distribution: "global",
     },
   };
 }
@@ -117,20 +126,20 @@ export default async function StorePage({ params }: PageProps) {
     url: store.url || `https://melian.com/stores/${store.id}`,
     logo: store.logo || undefined,
     identifier: store.id,
-    aggregateRating: store.verified ? {
-      "@type": "AggregateRating",
-      ratingValue: store.rank || 4.5,
-      bestRating: 5,
-      worstRating: 1,
-    } : undefined,
+    aggregateRating: store.verified
+      ? {
+          "@type": "AggregateRating",
+          ratingValue: store.rank || 4.5,
+          bestRating: 5,
+          worstRating: 1,
+        }
+      : undefined,
   };
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Required for JSON-LD structured data */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
 
       <div className="min-h-screen bg-white relative pb-24 lg:pb-8">
         <div className="bg-gradient-to-b from-gray-50 to-white py-12 md:py-16 lg:py-20 border-b border-gray-200">
@@ -138,24 +147,22 @@ export default async function StorePage({ params }: PageProps) {
             <div className="flex flex-col md:flex-row items-start md:items-center gap-6 mb-6">
               {store.logo && (
                 <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden bg-white shadow-lg ring-1 ring-gray-200">
-                  <Image
-                    src={store.logo}
-                    alt={store.name}
-                    fill
-                    className="object-cover"
-                    priority
-                  />
+                  <Image src={store.logo} alt={store.name} fill className="object-cover" priority />
                 </div>
               )}
 
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
-                  <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">
-                    {store.name}
-                  </h1>
+                  <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">{store.name}</h1>
                   {store.verified && (
                     <div className="flex items-center justify-center w-7 h-7 rounded-full bg-blue-500">
-                      <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <svg
+                        className="w-4 h-4 text-white"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        role="img"
+                        aria-label="Verified store"
+                      >
                         <path
                           fillRule="evenodd"
                           d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -166,15 +173,13 @@ export default async function StorePage({ params }: PageProps) {
                   )}
                 </div>
 
-                {store.description && (
-                  <p className="text-lg text-gray-600 max-w-3xl mb-4">{store.description}</p>
-                )}
+                {store.description && <p className="text-lg text-gray-600 max-w-3xl mb-4">{store.description}</p>}
 
                 {store.categories && (
                   <div className="flex flex-wrap gap-2">
-                    {store.categories.split(',').map((category, idx) => (
+                    {store.categories.split(",").map((category) => (
                       <span
-                        key={idx}
+                        key={category.trim()}
                         className="px-3 py-1 bg-white border border-gray-200 rounded-full text-sm text-gray-700"
                       >
                         {category.trim()}
@@ -192,7 +197,7 @@ export default async function StorePage({ params }: PageProps) {
             <>
               <h2 className="text-2xl font-bold text-gray-900 mb-8">Products</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
-                {products.map((product: any) => (
+                {products.map((product: StoreProduct) => (
                   <a
                     key={product.product_id}
                     href={appStoreUrl}
@@ -211,15 +216,11 @@ export default async function StorePage({ params }: PageProps) {
                       )}
                     </div>
                     {product.name && (
-                      <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-1">
-                        {product.name}
-                      </h3>
+                      <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-1">{product.name}</h3>
                     )}
                     {product.price && (
                       <p className="text-sm text-gray-600">
-                        ${typeof product.price === "number"
-                          ? product.price.toFixed(2)
-                          : product.price}
+                        ${typeof product.price === "number" ? product.price.toFixed(2) : product.price}
                       </p>
                     )}
                   </a>
@@ -234,6 +235,8 @@ export default async function StorePage({ params }: PageProps) {
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  role="img"
+                  aria-label="No products"
                 >
                   <path
                     strokeLinecap="round"
@@ -256,22 +259,14 @@ export default async function StorePage({ params }: PageProps) {
             className="bg-white/90 backdrop-blur-md shadow-xl rounded-2xl p-6 block hover:bg-white transition-colors border border-gray-200"
           >
             <div className="flex items-center space-x-3 mb-2">
-              <img
-                src="/assets/logoSmall.png"
-                alt="Melian Logo"
-                className="w-10 h-10 rounded-full"
-              />
+              <Image src="/assets/logoSmall.png" alt="Melian Logo" width={40} height={40} className="rounded-full" />
               <div className="text-2xl font-semibold text-gray-900">Get the App</div>
             </div>
 
             <div className="text-sm text-gray-600 mb-3">Effortless shopping</div>
 
             <div>
-              <img
-                src="/assets/appStoreBlack.svg"
-                alt="Download on the App Store"
-                className="h-10 w-auto"
-              />
+              <Image src="/assets/appStoreBlack.svg" alt="Download on the App Store" width={120} height={40} />
             </div>
           </a>
         </div>
@@ -284,13 +279,15 @@ export default async function StorePage({ params }: PageProps) {
             className="bg-gray-900 text-white rounded-xl px-6 py-4 flex items-center justify-center gap-3 w-full font-semibold hover:bg-gray-800 transition-colors"
           >
             <span>Download App</span>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M14 5l7 7m0 0l-7 7m7-7H3"
-              />
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              role="img"
+              aria-label="Arrow right"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
           </a>
         </div>
