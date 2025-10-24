@@ -140,7 +140,7 @@ export default async function CollectionPage({ params }: PageProps) {
   return (
     <>
       {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Required for JSON-LD structured data */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }} />
 
       <div className="min-h-screen bg-white relative">
         {collection.cover ? (
@@ -225,7 +225,7 @@ export default async function CollectionPage({ params }: PageProps) {
                   {product.name && (
                     <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-1">{product.name}</h3>
                   )}
-                  {product.price && <p className="text-sm text-gray-600">${product.price.toFixed(2)}</p>}
+                  {typeof product.price === "number" && !Number.isNaN(product.price) && <p className="text-sm text-gray-600">${product.price.toFixed(2)}</p>}
                 </a>
               ))}
             </div>

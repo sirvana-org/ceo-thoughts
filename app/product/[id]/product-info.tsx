@@ -3,7 +3,13 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { fetchProduct, productQueries } from "./product-queries";
+import { fetchProduct } from "@/lib/products";
+import { productQueries } from "./product-queries";
+
+const formatPrice = (currency: string | null | undefined, price: number | string) => {
+  const symbol = currency || "$";
+  return typeof price === "number" ? `${symbol} ${price.toFixed(2)}` : `${symbol} ${price}`;
+};
 
 const appStoreUrl = "https://apps.apple.com/us/app/melian/id6738385324";
 
@@ -49,28 +55,31 @@ interface ProductInfoProps {
 export function ProductInfo({ productId }: ProductInfoProps) {
   const { data } = useQuery({
     queryKey: productQueries.detail({ id: productId }),
-    queryFn: fetchProduct,
+    queryFn: () => fetchProduct(productId),
   });
 
   const product = data?.product;
 
   if (!product) return null;
 
-  const displayPrice = product.promotionalPrice || product.price;
+  const displayPrice = product.promotionalPrice ?? product.price;
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
         <h1 className="subhead-large">{product.name}</h1>
 
-        {displayPrice && (
+        {displayPrice !== null && displayPrice !== undefined && (
           <div className="flex items-baseline gap-3 mb-4">
             <span className="subhead-medium">
-              {product.currency || "$"} {typeof displayPrice === "number" ? displayPrice.toFixed(2) : displayPrice}
+              {formatPrice(product.currency, displayPrice)}
             </span>
-            {product.promotionalPrice && product.price && (
+            {product.promotionalPrice !== null &&
+              product.promotionalPrice !== undefined &&
+              product.price !== null &&
+              product.price !== undefined && (
               <span className="subhead-medium text-neutral-grayPrimary line-through">
-                {product.currency || "$"} {typeof product.price === "number" ? product.price.toFixed(2) : product.price}
+                {formatPrice(product.currency, product.price)}
               </span>
             )}
           </div>

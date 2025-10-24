@@ -3,7 +3,8 @@
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useState } from "react";
-import { fetchProduct, productQueries } from "./product-queries";
+import { fetchProduct } from "@/lib/products";
+import { productQueries } from "./product-queries";
 
 interface ProductImageGalleryProps {
   productId: string;
@@ -12,7 +13,7 @@ interface ProductImageGalleryProps {
 export function ProductImageGallery({ productId }: ProductImageGalleryProps) {
   const { data } = useQuery({
     queryKey: productQueries.detail({ id: productId }),
-    queryFn: fetchProduct,
+    queryFn: () => fetchProduct(productId),
   });
 
   const product = data?.product;

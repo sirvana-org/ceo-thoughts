@@ -1,14 +1,22 @@
 "use client";
 
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { type QueryFunctionContext, useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { MasonryList } from "@/features/grid/masonry-list";
 import { ProductCard } from "@/features/product/product-card";
-import { fetchRelatedProducts, productQueries, type RelatedProduct } from "./product-queries";
+import { fetchRelatedProducts } from "@/lib/products";
+import { productQueries } from "./product-queries";
 
 interface RelatedProductsProps {
   productId: string;
 }
+
+type RelatedListQueryKey = ReturnType<typeof productQueries.relatedList>;
+
+const relatedProductsQueryFn = ({ queryKey, pageParam = 0 }: QueryFunctionContext<RelatedListQueryKey, number>) => {
+  const [{ id }] = queryKey;
+  return fetchRelatedProducts(id, 20, pageParam);
+};
 
 export function RelatedProducts({ productId }: RelatedProductsProps) {
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -16,7 +24,7 @@ export function RelatedProducts({ productId }: RelatedProductsProps) {
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useInfiniteQuery({
     queryKey: productQueries.relatedList({ id: productId }),
-    queryFn: fetchRelatedProducts,
+    queryFn: relatedProductsQueryFn,
     getNextPageParam: (lastPage, allPages) => {
       if (!lastPage || lastPage.length === 0) return undefined;
       const fetchedSoFar = allPages.reduce((acc, page) => acc + page.length, 0);
@@ -48,8 +56,6 @@ export function RelatedProducts({ productId }: RelatedProductsProps) {
     };
   }, [fetchNextPage, hasNextPage, isLoading, isFetchingNextPage]);
 
-  const allProducts = data?.pages.flatMap((page) => page || []) || [];
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -57,6 +63,8 @@ export function RelatedProducts({ productId }: RelatedProductsProps) {
       </div>
     );
   }
+
+  const allProducts = data?.pages.flat() ?? [];
 
   if (allProducts.length === 0) {
     return null;
@@ -77,13 +85,9 @@ export function RelatedProducts({ productId }: RelatedProductsProps) {
             height={relatedProduct.height}
           />
         )}
+        onLoadMore={fetchNextPage}
+        isLoadingMore={isFetchingNextPage}
       />
-
-      {hasNextPage && (
-        <div ref={loadMoreRef} className="flex items-center justify-center py-8">
-          {isFetchingNextPage && <div className="animate-pulse text-neutral-grayPrimary">Loading more...</div>}
-        </div>
-      )}
     </div>
   );
 }

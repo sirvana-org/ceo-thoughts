@@ -138,10 +138,19 @@ export default async function ExternalProfilePage({ params }: PageProps) {
     url: `${MELIAN_SITE_URL}/external-profile/${profile.userId ?? profile.id}`,
   };
 
+  const jsonLd = JSON.stringify(structuredData);
+  const sanitizedJsonLd = jsonLd
+    .replace(/<\/(script)/gi, "\\u003C/$1")
+    .replace(/</g, "\\u003C")
+    .replace(/>/g, "\\u003E")
+    .replace(/&/g, "\\u0026")
+    .replace(/\u2028/g, "\\u2028")
+    .replace(/\u2029/g, "\\u2029");
+
   return (
     <>
       {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Required for JSON-LD structured data */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: sanitizedJsonLd }} />
       <div className="min-h-screen bg-white flex items-center justify-center py-16 px-6 md:px-8 lg:px-12">
         <div className="bg-white border border-gray-200 rounded-3xl shadow-lg px-12 py-16 flex flex-col items-center gap-8">
           <div className="relative w-32 h-32 rounded-3xl overflow-hidden bg-gray-50 shadow-md ring-1 ring-gray-200 flex items-center justify-center">

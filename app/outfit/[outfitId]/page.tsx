@@ -154,7 +154,7 @@ export default async function OutfitPage({ params }: PageProps) {
   return (
     <>
       {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Required for JSON-LD structured data */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }} />
 
       <div className="min-h-screen bg-white relative pb-24 lg:pb-8">
         <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 py-8 md:py-12">
@@ -275,7 +275,7 @@ export default async function OutfitPage({ params }: PageProps) {
                     {product.name && (
                       <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-1">{product.name}</h3>
                     )}
-                    {product.price && (
+                    {product.price != null && (
                       <p className="text-sm text-gray-600">
                         ${typeof product.price === "number" ? product.price.toFixed(2) : product.price}
                       </p>

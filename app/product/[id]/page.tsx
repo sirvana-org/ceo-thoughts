@@ -1,10 +1,12 @@
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { dehydrate, HydrationBoundary, type QueryFunctionContext } from "@tanstack/react-query";
 import { getQueryClient } from "@/app/get-query-client";
 import { Button } from "@/components/ui/button";
+import { fetchProduct, fetchRelatedProducts, fetchStoreProducts } from "@/lib/products";
 import { ProductImageGallery } from "./product-image-gallery";
 import { ProductInfo } from "./product-info";
-import { fetchProduct, fetchRelatedProducts, fetchStoreProducts, productQueries } from "./product-queries";
+import { productQueries } from "./product-queries";
 import { RelatedProducts } from "./related-products";
+import { notFound } from "next/navigation";
 
 const MobileBuyButton = () => {
   return (
@@ -28,23 +30,30 @@ export default async function ProductDetailsPage({ params }: { params: Promise<{
 
   const productData = await queryClient.fetchQuery({
     queryKey: productQueries.detail({ id }),
-    queryFn: fetchProduct,
+    queryFn: () => fetchProduct(id),
   });
+
+  if (!productData?.product) {
+    notFound();
+  }
+
+  const storeId = productData.product?.storeId;
 
   await Promise.all([
     queryClient.prefetchInfiniteQuery({
       queryKey: productQueries.relatedList({ id }),
-      queryFn: fetchRelatedProducts,
+      queryFn: ({ pageParam = 0 }: QueryFunctionContext<ReturnType<typeof productQueries.relatedList>, number>) =>
+        fetchRelatedProducts(id, 20, pageParam),
       initialPageParam: 0,
       getNextPageParam: (lastPage: Awaited<ReturnType<typeof fetchRelatedProducts>>) => {
         if (!lastPage || lastPage.length === 0) return undefined;
         return lastPage.length < 20 ? undefined : 20;
       },
     }),
-    productData?.product?.storeId
+    storeId
       ? queryClient.prefetchQuery({
-          queryKey: productQueries.storeProducts(productData.product.storeId),
-          queryFn: fetchStoreProducts,
+          queryKey: productQueries.storeProducts(storeId),
+          queryFn: () => fetchStoreProducts(storeId),
         })
       : Promise.resolve(),
   ]);
