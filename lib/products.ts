@@ -45,7 +45,6 @@ export async function fetchProduct(productId: string): Promise<ProductWithRelate
     if (!res.ok) return null;
 
     const data = (await res.json()) as ProductWithRelatedResponse;
-    console.log(data);
     return data;
   } catch {
     return null;

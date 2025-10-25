@@ -20,7 +20,6 @@ export function ProductImageGallery({ productId }: ProductImageGalleryProps) {
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
-  console.log(product);
   const currentImage = product?.images[selectedImageIndex] || product?.images[0];
   const isLandscape = currentImage?.width && currentImage?.height && currentImage.width > currentImage.height;
 

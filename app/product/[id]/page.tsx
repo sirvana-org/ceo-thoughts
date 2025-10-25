@@ -1,4 +1,5 @@
 import { dehydrate, HydrationBoundary, type QueryFunctionContext } from "@tanstack/react-query";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getQueryClient } from "@/app/get-query-client";
 import { Button } from "@/components/ui/button";
@@ -8,17 +9,17 @@ import { ProductInfo } from "./product-info";
 import { productQueries } from "./product-queries";
 import { RelatedProducts } from "./related-products";
 
-const MobileBuyButton = () => {
+const MobileBuyButton = ({ productUrl }: { productUrl: string }) => {
   return (
     <div className="block lg:hidden bg-white border-t border-gray-200 p-4 fixed bottom-0 left-0 right-0 z-50">
-      <Button asChild variant="primary" size="lg" className="w-full">
-        <a href="https://apps.apple.com/us/app/melian/id6738385324" target="_blank" rel="noopener noreferrer">
-          <span>Download App</span>
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-label="Arrow right">
-            <title>Arrow right</title>
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-          </svg>
-        </a>
+      <Button asChild variant="primary" size="md" className="w-full">
+        <Link
+          href={productUrl.startsWith("https://") ? productUrl : `https://${productUrl}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span>Buy product</span>
+        </Link>
       </Button>
     </div>
   );
@@ -70,7 +71,7 @@ export default async function ProductDetailsPage({ params }: { params: Promise<{
           <RelatedProducts productId={id} />
         </div>
 
-        <MobileBuyButton />
+        <MobileBuyButton productUrl={productData.product.url} />
       </div>
     </HydrationBoundary>
   );
