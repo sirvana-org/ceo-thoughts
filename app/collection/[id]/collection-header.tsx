@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
+import { UserProfileBadge } from "@/components/user-profile-badge";
 import { type CollectionWithUser, fetchCollectionWithUser } from "@/lib/collections";
 import { collectionQueries } from "./collection-queries";
 
@@ -32,7 +33,12 @@ const CollectionHeaderContent = ({ collection }: { collection: CollectionWithUse
   return (
     <div className="flex flex-col gap-2 md:gap-4">
       <div className="md:hidden">
-        <CollectionUserInfo collection={collection} />
+        <UserProfileBadge
+          size="md"
+          userId={collection.user?.userId || ""}
+          userName={collection.user?.userName}
+          profilePicture={collection.user?.userProfilePicture}
+        />
       </div>
 
       <div className="flex flex-col gap-2 md:gap-4">
@@ -44,7 +50,12 @@ const CollectionHeaderContent = ({ collection }: { collection: CollectionWithUse
 
       {/* Desktop: User info below */}
       <div className="hidden md:block">
-        <CollectionUserInfo collection={collection} />
+        <UserProfileBadge
+          size="md"
+          userId={collection.user?.userId || ""}
+          userName={collection.user?.userName}
+          profilePicture={collection.user?.userProfilePicture}
+        />
       </div>
     </div>
   );

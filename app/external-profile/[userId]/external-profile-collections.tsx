@@ -1,11 +1,11 @@
 "use client";
 
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { MasonryList, Spinner } from "@/features/grid/masonry-list";
 import { CollectionCard } from "@/features/collection/collection-card";
-import { userCollectionsQueryFn, getUserCollectionsNextPageParam } from "./external-profile-collections-query";
+import { MasonryList, Spinner } from "@/features/grid/masonry-list";
 import type { UserCollectionsQueryKey } from "./external-profile-collections-queries";
 import { userCollectionsQueries } from "./external-profile-collections-queries";
+import { getUserCollectionsNextPageParam, userCollectionsQueryFn } from "./external-profile-collections-query";
 
 interface ExternalProfileCollectionsProps {
   userId: string;
@@ -36,6 +36,7 @@ export function ExternalProfileCollections({ userId }: ExternalProfileCollection
         renderItem={(collection, index) => (
           <CollectionCard
             collectionId={collection.id}
+            ownerUserId={collection.user_id}
             name={collection.name}
             cover={collection.cover}
             previewImages={collection.previewImages}

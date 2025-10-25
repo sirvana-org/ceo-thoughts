@@ -137,6 +137,7 @@ export default async function ExternalProfilePage({ params }: PageProps) {
                 alt={profile.name ? `${profile.name}'s avatar` : "Melian profile avatar"}
                 fill
                 className="object-cover"
+                priority
               />
             </div>
           ) : (

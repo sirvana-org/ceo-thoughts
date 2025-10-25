@@ -1,7 +1,7 @@
 "use client";
 
-import { MasonryList } from "@/features/grid/masonry-list";
 import { CollectionCard } from "@/features/collection/collection-card";
+import { MasonryList } from "@/features/grid/masonry-list";
 import type { UserCollection } from "@/lib/collections";
 
 interface ExternalProfileCollectionsServerProps {
@@ -23,6 +23,7 @@ export function ExternalProfileCollectionsServer({ collections }: ExternalProfil
       renderItem={(collection, index) => (
         <CollectionCard
           collectionId={collection.id}
+          ownerUserId={collection.user_id}
           name={collection.name}
           cover={collection.cover}
           previewImages={collection.previewImages}

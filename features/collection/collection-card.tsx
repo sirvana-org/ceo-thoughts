@@ -4,6 +4,7 @@ import { UserProfileBadge } from "@/components/user-profile-badge";
 
 interface CollectionCardProps {
   collectionId: string;
+  ownerUserId: string;
   name: string;
   cover?: string | null;
   previewImages?: string[];
@@ -14,6 +15,7 @@ interface CollectionCardProps {
 
 export function CollectionCard({
   collectionId,
+  ownerUserId,
   name,
   cover,
   previewImages = [],
@@ -86,8 +88,10 @@ export function CollectionCard({
           <UserProfileBadge
             userName={ownerUserName}
             profilePicture={ownerProfilePicture}
+            userId={ownerUserId}
             size="sm"
             textClassName="text-neutral-blackPrimary body-small"
+            asLink={false}
           />
         </div>
       </div>

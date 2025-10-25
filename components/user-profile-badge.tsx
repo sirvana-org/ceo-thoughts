@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 interface UserProfileBadgeProps {
   userName?: string | null;
@@ -6,6 +7,8 @@ interface UserProfileBadgeProps {
   size?: "sm" | "md" | "lg";
   textClassName?: string;
   showFlexWrapper?: boolean;
+  userId: string;
+  asLink?: boolean;
 }
 
 const sizeMap = {
@@ -18,12 +21,14 @@ export function UserProfileBadge({
   userName,
   profilePicture,
   size = "md",
+  userId,
   textClassName = "body-medium text-neutral-blackPrimary",
   showFlexWrapper = false,
+  asLink = true,
 }: UserProfileBadgeProps) {
   if (!userName) return null;
 
-  return (
+  const content = (
     <div className="flex flex-row items-center gap-2 md:gap-3">
       {profilePicture && (
         <div className={`relative ${sizeMap[size]} rounded-full overflow-hidden`}>
@@ -40,4 +45,10 @@ export function UserProfileBadge({
       )}
     </div>
   );
+
+  if (!asLink) {
+    return content;
+  }
+
+  return <Link href={`/external-profile/${userId}`}>{content}</Link>;
 }
