@@ -2,6 +2,7 @@
 
 import Masonry from "react-masonry-css";
 import { useEffect, useRef, type ReactNode } from "react";
+import { trackEvent } from "@/lib/mixpanel";
 
 interface SpinnerProps {
   size?: "sm" | "md" | "lg";
@@ -50,6 +51,9 @@ export function MasonryList<T extends MasonryItem>({
     observerRef.current = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
+          trackEvent("infinite_scroll", {
+            items_loaded: items.length,
+          });
           onLoadMore();
         }
       },
@@ -65,7 +69,7 @@ export function MasonryList<T extends MasonryItem>({
         observerRef.current.disconnect();
       }
     };
-  }, [onLoadMore, isLoadingMore]);
+  }, [onLoadMore, isLoadingMore, items.length]);
 
   return (
     <>

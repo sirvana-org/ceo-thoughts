@@ -9,13 +9,12 @@ interface ProductCardProps {
   imageUrl?: string;
   name?: string;
   price?: number;
-  priceCurrency?: string;
   brand?: string;
   width?: number;
   height?: number;
 }
 
-export function ProductCard({ productId, imageUrl, name, price, priceCurrency, brand, width, height }: ProductCardProps) {
+export function ProductCard({ productId, imageUrl, name, price, brand, width, height }: ProductCardProps) {
   const aspectRatio = width && height && height > 0 ? width / height : undefined;
   const shouldShowPrice = typeof price === "number" && Number.isFinite(price);
 

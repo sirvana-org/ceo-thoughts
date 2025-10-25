@@ -2,7 +2,7 @@
 
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import * as React from "react";
-
+import { trackEvent } from "@/lib/mixpanel";
 import { cn } from "@/lib/utils";
 
 const Tabs = TabsPrimitive.Root;
@@ -18,16 +18,30 @@ TabsList.displayName = TabsPrimitive.List.displayName;
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.Trigger
-    ref={ref}
-    className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap body-small text-lg transition-all focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 text-neutral-grayPrimary/50 data-[state=active]:text-neutral-blackPrimary",
-      className,
-    )}
-    {...props}
-  />
-));
+>(({ className, onClick, value, ...props }, ref) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    // Track tab press with Mixpanel
+    trackEvent("tab_press", {
+      tab_name: value,
+    });
+
+    // Call original onClick if provided
+    onClick?.(event);
+  };
+
+  return (
+    <TabsPrimitive.Trigger
+      ref={ref}
+      value={value}
+      onClick={handleClick}
+      className={cn(
+        "inline-flex items-center justify-center whitespace-nowrap body-small text-lg transition-all focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 text-neutral-grayPrimary/50 data-[state=active]:text-neutral-blackPrimary",
+        className,
+      )}
+      {...props}
+    />
+  );
+});
 TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
 const TabsContent = React.forwardRef<

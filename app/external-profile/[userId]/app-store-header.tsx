@@ -1,6 +1,13 @@
+"use client";
+
 import Image from "next/image";
+import { trackEvent } from "@/lib/mixpanel";
 
 export function AppStoreHeader() {
+  const handleTrackClick = () => {
+    trackEvent("app_store_header_click");
+  };
+
   return (
     <>
       <div className="sticky top-0 z-50 bg-white border-b border-neutral-graySecondary md:hidden">
@@ -9,6 +16,7 @@ export function AppStoreHeader() {
           target="_blank"
           rel="noopener noreferrer"
           className="block"
+          onClick={handleTrackClick}
         >
           <div className="flex items-center gap-3 flex-1 min-w-0 py-4 px-6">
             <Image
@@ -34,6 +42,7 @@ export function AppStoreHeader() {
           target="_blank"
           rel="noopener noreferrer"
           className="bg-white/80 backdrop-blur-md text-gray-900 rounded-2xl block w-full"
+          onClick={handleTrackClick}
         >
           {/* Header with logo */}
           <div className="flex items-center space-x-2 mb-2">

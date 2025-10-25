@@ -42,7 +42,7 @@ export function CollectionStores({ collectionId }: CollectionStoresProps) {
     <section>
       <div className="space-y-5">
         {allStores.map((store) => (
-          <Link key={store.id} href={`/stores/${store.id}`} className="flex items-center gap-3">
+          <div key={store.id} className="flex items-center gap-3">
             {store.logo ? (
               <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border border-gray-200">
                 <Image src={store.logo} alt={store.name} fill className="object-contain" />
@@ -53,7 +53,7 @@ export function CollectionStores({ collectionId }: CollectionStoresProps) {
             <div className="flex-1 min-w-0">
               <p className="body-small text-neutral-blackPrimary truncate">{store.name}</p>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
       {hasNextPage && (
