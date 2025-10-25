@@ -3,11 +3,14 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Script from "next/script";
 import { getQueryClient } from "@/app/get-query-client";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fetchCollection, fetchCollectionWithUser } from "@/lib/collections";
 import { CollectionHeader } from "./collection-header";
 import { CollectionProducts } from "./collection-products";
 import { collectionProductsQueryFn, getCollectionProductsNextPageParam } from "./collection-products-query";
 import { collectionQueries } from "./collection-queries";
+import { CollectionStores } from "./collection-stores";
+import { collectionStoresQueryFn, getCollectionStoresNextPageParam } from "./collection-stores-query";
 
 interface PageProps {
   params: {
@@ -121,6 +124,9 @@ export default async function CollectionPage({ params }: PageProps) {
     notFound();
   }
 
+  const { collection } = collectionData;
+  const hasStores = collection.stores.length > 0;
+
   await queryClient.prefetchInfiniteQuery({
     queryKey: collectionQueries.products({ id }),
     queryFn: collectionProductsQueryFn,
@@ -131,7 +137,17 @@ export default async function CollectionPage({ params }: PageProps) {
     ) => getCollectionProductsNextPageParam(lastPage, allPages),
   });
 
-  const { collection } = collectionData;
+  if (hasStores) {
+    await queryClient.prefetchInfiniteQuery({
+      queryKey: collectionQueries.stores({ id }),
+      queryFn: collectionStoresQueryFn,
+      initialPageParam: 0,
+      getNextPageParam: (
+        lastPage: Awaited<ReturnType<typeof collectionStoresQueryFn>>,
+        allPages: Awaited<ReturnType<typeof collectionStoresQueryFn>>[],
+      ) => getCollectionStoresNextPageParam(lastPage, allPages),
+    });
+  }
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -155,7 +171,20 @@ export default async function CollectionPage({ params }: PageProps) {
 
       <div className="flex flex-col gap-8 md:gap-12 justify-start p-4 md:p-8 max-w-7xl mx-auto">
         <CollectionHeader collectionId={collection.id} />
-        <CollectionProducts collectionId={collection.id} />
+        <Tabs defaultValue={hasStores ? "brands" : "products"} className="w-full">
+          <TabsList className="mb-2">
+            {hasStores && <TabsTrigger value="brands">Brands</TabsTrigger>}
+            <TabsTrigger value="products">Products</TabsTrigger>
+          </TabsList>
+          {hasStores && (
+            <TabsContent value="brands">
+              <CollectionStores collectionId={collection.id} />
+            </TabsContent>
+          )}
+          <TabsContent value="products">
+            <CollectionProducts collectionId={collection.id} />
+          </TabsContent>
+        </Tabs>
       </div>
     </HydrationBoundary>
   );

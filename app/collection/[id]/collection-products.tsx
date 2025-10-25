@@ -40,7 +40,6 @@ export function CollectionProducts({ collectionId }: CollectionProductsProps) {
 
   return (
     <section>
-      <h2 className="subhead-medium text-neutral-blackPrimary pb-4">Products</h2>
       <MasonryList
         items={allProducts}
         renderItem={(product) => (

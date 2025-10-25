@@ -1,3 +1,5 @@
+import type { StoreInfo } from "@/types/store";
+
 export interface CollectionProduct {
   product_id: string;
   image_url?: string;
@@ -62,17 +64,54 @@ export async function fetchCollection(collectionId: string) {
   }
 }
 
-export interface CollectionWithUser {
-  collection: Collection;
+export type CollectionStore = {
+  store_id: string;
+  url: string;
+  name: string;
+  page_title: string;
+  logo: string;
+  description: string | null;
+  keywords: string | null;
+  categories: string[];
+  crawled_at: string;
+  run_id: string;
+  store_info_error: string | null;
+  is_official_brand: boolean | null;
+  is_brand: boolean;
+  brand_name: string;
+  tags: string[];
+  created_at: string;
+};
+
+export type CollectionPage = {
+  id: string;
+  name: string;
+  cover: string | null;
+  subtitle: string | null;
+  isPrivate: boolean;
+  createdAt: string;
+  previewImages: string[];
+  isBookmarked: boolean;
+  isOwner: boolean;
+  storesCount: number;
+  productsCount: number;
+  stores: CollectionStore[];
+  isLiked: boolean;
+  likesCount: number;
+  commentsCount: number;
+};
+
+export type CollectionPageResponse = {
+  collection: CollectionPage;
   user: {
-    userId: string;
+    userId: string | null;
     userName: string;
     userProfilePicture: string;
     userIsOwner: boolean;
-  } | null;
-}
+  };
+};
 
-export async function fetchCollectionWithUser(collectionId: string): Promise<CollectionWithUser | null> {
+export async function fetchCollectionWithUser(collectionId: string): Promise<CollectionPageResponse | null> {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/collections/ready/${collectionId}`, {
       cache: "no-store",
@@ -86,27 +125,7 @@ export async function fetchCollectionWithUser(collectionId: string): Promise<Col
     }
 
     const data = await response.json();
-
-    // Map user field into correct shape or null
-    const user =
-      data.user && typeof data.user === "object"
-        ? {
-            userId: data.user.userId,
-            userName: data.user.userName,
-            userProfilePicture: data.user.userProfilePicture,
-            userIsOwner: data.user.userIsOwner,
-          }
-        : null;
-
-    // Attach user to the collection object
-    const collectionWithUser: CollectionWithUser = {
-      collection: {
-        ...data.collection,
-      },
-      user,
-    };
-
-    return collectionWithUser;
+    return data;
   } catch (error) {
     console.error("Error fetching collection with user:", error);
     return null;
@@ -191,11 +210,7 @@ export interface UserCollectionsPage {
   offset: number;
 }
 
-export async function fetchUserCollections(
-  userId: string,
-  limit = 21,
-  offset = 0,
-): Promise<UserCollectionsPage> {
+export async function fetchUserCollections(userId: string, limit = 21, offset = 0): Promise<UserCollectionsPage> {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/collections/ready/user/${userId}?limit=${limit}&offset=${offset}`,
@@ -227,6 +242,54 @@ export async function fetchUserCollections(
     console.error("Error fetching user collections:", error);
     return {
       collections: [],
+      limit,
+      offset,
+    };
+  }
+}
+
+export interface CollectionStoresPage {
+  stores: StoreInfo[];
+  limit: number;
+  offset: number;
+}
+
+export async function fetchCollectionStores(
+  collectionId: string,
+  limit = 20,
+  offset = 0,
+): Promise<CollectionStoresPage> {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/collections/ready/${collectionId}/stores?limit=${limit}&offset=${offset}`,
+      {
+        cache: "no-store",
+        headers: {
+          Authorization: "Bearer no-token-secret",
+        },
+      },
+    );
+
+    if (!response.ok) {
+      return {
+        stores: [],
+        limit,
+        offset,
+      };
+    }
+
+    const data = await response.json();
+    const stores = Array.isArray(data) ? (data as StoreInfo[]) : [];
+
+    return {
+      stores,
+      limit,
+      offset,
+    };
+  } catch (error) {
+    console.error("Error fetching collection stores:", error);
+    return {
+      stores: [],
       limit,
       offset,
     };

@@ -15,11 +15,6 @@ interface ProductCardProps {
   height?: number;
 }
 
-function formatPrice(price: number, currency?: string) {
-  const symbol = currency ?? "$";
-  return `${symbol}${price.toFixed(2)}`;
-}
-
 export function ProductCard({ productId, imageUrl, name, price, priceCurrency, brand, width, height }: ProductCardProps) {
   const aspectRatio = width && height && height > 0 ? width / height : undefined;
   const shouldShowPrice = typeof price === "number" && Number.isFinite(price);
@@ -41,18 +36,18 @@ export function ProductCard({ productId, imageUrl, name, price, priceCurrency, b
         <div className="absolute bottom-0 left-0 right-0 p-2 flex flex-col gap-1">
           <div className="flex flex-row gap-2">
             {brand && (
-              <Badge variant="secondary" className="text-xs text-neutral-grayPrimary rounded-lg max-w-[50%] block overflow-hidden text-ellipsis whitespace-nowrap group-hover:opacity-20 transition-opacity duration-300">
+              <Badge variant="secondary" className="body-small text-xs px-1 py-px  text-neutral-grayPrimary rounded-md max-w-[50%] block overflow-hidden text-ellipsis whitespace-nowrap group-hover:opacity-20 transition-opacity duration-300">
                 {brand}
               </Badge>
             )}
             {shouldShowPrice && (
-              <Badge variant="secondary" className="text-xs text-neutral-grayPrimary group-hover:opacity-20 transition-opacity duration-300">
-                {formatPrice(price, priceCurrency)}
+              <Badge variant="secondary" className="body-small text-xs px-1 py-px text-neutral-grayPrimary group-hover:opacity-20 transition-opacity duration-300">
+                ${price}
               </Badge>
             )}
           </div>
           {name && (
-            <Badge variant="secondary" className="text-xs text-neutral-grayPrimary rounded-lg w-full block overflow-hidden text-ellipsis whitespace-nowrap group-hover:opacity-20 transition-opacity duration-300">
+            <Badge variant="secondary" className="body-small text-xs px-1 py-px text-neutral-grayPrimary rounded-md w-fit max-w-full block overflow-hidden text-ellipsis whitespace-nowrap group-hover:opacity-20 transition-opacity duration-300">
               {name}
             </Badge>
           )}
