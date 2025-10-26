@@ -1,20 +1,39 @@
 import type { StoreInfo } from "@/types/store";
 
-interface StoreProduct {
+export interface StoreProduct {
   product_id: string;
   image_url?: string;
   name?: string;
   price?: number;
+  brand?: string;
+  width?: number;
+  height?: number;
 }
 
-interface StoreProductsResponse {
+export interface FilterFacetOption {
+  key: string | number | boolean;
+  count: number;
+}
+
+export type FilterFacets = Record<string, FilterFacetOption[]>;
+
+export interface StoreProductsResponse {
   data: StoreProduct[];
+  total?: number;
+  from?: number;
+  size?: number;
+  filterFacets?: FilterFacets;
 }
 
-export async function fetchStore(storeId: string): Promise<StoreInfo | null> {
+export interface StoreInfoResponse {
+  store: StoreInfo;
+  categories: string[];
+}
+
+export async function fetchStore(storeId: string): Promise<StoreInfoResponse | null> {
   if (!storeId) return null;
 
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/stores/${encodeURIComponent(storeId)}`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/stores/ready/${encodeURIComponent(storeId)}`;
   try {
     const res = await fetch(url, {
       cache: "no-store",
@@ -27,7 +46,7 @@ export async function fetchStore(storeId: string): Promise<StoreInfo | null> {
     if (!res.ok) return null;
 
     const data = await res.json();
-    return data.store as StoreInfo;
+    return data as StoreInfoResponse;
   } catch {
     return null;
   }

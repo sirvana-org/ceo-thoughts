@@ -1,7 +1,13 @@
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { getQueryClient } from "@/app/get-query-client";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fetchStore, fetchStoreProducts } from "@/lib/stores";
+import { StoreProducts } from "./store-products";
+import { storeProductsQueryFn } from "./store-products-query";
+import { storeQueries } from "./store-queries";
 
 interface PageProps {
   params: {
@@ -9,20 +15,27 @@ interface PageProps {
   };
 }
 
-interface StoreProduct {
-  product_id: string;
-  image_url?: string;
-  name?: string;
-  price?: number;
-}
-
 export const revalidate = 60;
+
+async function fetchStoreCategories(storeId: string) {
+  const productsData = await fetchStoreProducts(storeId, 1, 0);
+
+  if (!productsData?.filterFacets?.category) {
+    return [];
+  }
+
+  return productsData.filterFacets.category.map((cat) => ({
+    key: String(cat.key),
+    name: String(cat.key),
+    count: cat.count,
+  }));
+}
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { storeId } = await params;
-  const store = await fetchStore(storeId);
+  const storeData = await fetchStore(storeId);
 
-  if (!store) {
+  if (!storeData) {
     return {
       title: "Store not found | Sirvana",
       description: "The requested store could not be found.",
@@ -32,6 +45,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       },
     };
   }
+
+  const { store } = storeData;
 
   const title = store.page_title || `${store.name} - Shop Online`;
   const description =
@@ -107,15 +122,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function StorePage({ params }: PageProps) {
   const { storeId } = await params;
-  const store = await fetchStore(storeId);
-  const productsData = await fetchStoreProducts(storeId, 24, 0);
+  const storeData = await fetchStore(storeId);
 
-  if (!store) {
+  if (!storeData) {
     notFound();
   }
 
-  const products = productsData?.data || [];
-  const appStoreUrl = "https://apps.apple.com/us/app/melian/id6738385324";
+  const { store } = storeData;
+  const categories = await fetchStoreCategories(storeId);
+
+  const queryClient = getQueryClient();
+
+  await queryClient.prefetchInfiniteQuery({
+    queryKey: storeQueries.products({ id: storeId }),
+    queryFn: storeProductsQueryFn,
+    initialPageParam: 0,
+  });
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -141,46 +163,31 @@ export default async function StorePage({ params }: PageProps) {
       {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Required for JSON-LD structured data */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
 
-      <div className="min-h-screen bg-white relative pb-24 lg:pb-8">
-        <div className="bg-gradient-to-b from-gray-50 to-white py-12 md:py-16 lg:py-20 border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-6 mb-6">
+      <div className="min-h-screen relative flex flex-col gap-6 lg:gap-8 pb-6 lg:pb-8">
+        <div className="pt-6 md:pt-8 lg:pt-12">
+          <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 pb-6 md:pb-8">
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
               {store.logo && (
-                <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden bg-white shadow-lg ring-1 ring-gray-200">
-                  <Image src={store.logo} alt={store.name} fill className="object-cover" priority />
+                <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden bg-white shadow-lg ring-1 ring-neutral-graySecondary">
+                  <Image src={store.logo} alt={store.name} fill className="object-contain" priority />
                 </div>
               )}
 
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">{store.name}</h1>
-                  {store.verified && (
-                    <div className="flex items-center justify-center w-7 h-7 rounded-full bg-blue-500">
-                      <svg
-                        className="w-4 h-4 text-white"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        role="img"
-                        aria-label="Verified store"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                  )}
+              <div className="flex-1 flex flex-col gap-4">
+                <div className="flex items-center gap-3">
+                  <h1 className="headline-medium text-neutral-blackPrimary">{store.name}</h1>
                 </div>
 
-                {store.description && <p className="text-lg text-gray-600 max-w-3xl mb-4">{store.description}</p>}
+                {store.description && (
+                  <p className="body-medium text-neutral-grayPrimary max-w-3xl">{store.description}</p>
+                )}
 
                 {store.categories && (
                   <div className="flex flex-wrap gap-2">
                     {store.categories.split(",").map((category) => (
                       <span
                         key={category.trim()}
-                        className="px-3 py-1 bg-white border border-gray-200 rounded-full text-sm text-gray-700"
+                        className="px-3 py-1 bg-white border border-neutral-graySecondary rounded-full body-small text-neutral-grayPrimary"
                       >
                         {category.trim()}
                       </span>
@@ -192,104 +199,29 @@ export default async function StorePage({ params }: PageProps) {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 py-8 md:py-12">
-          {products.length > 0 ? (
-            <>
-              <h2 className="text-2xl font-bold text-gray-900 mb-8">Products</h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
-                {products.map((product: StoreProduct) => (
-                  <a
-                    key={product.product_id}
-                    href={appStoreUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group cursor-pointer"
-                  >
-                    <div className="relative aspect-[3/4] bg-gray-100 rounded-lg overflow-hidden mb-3">
-                      {product.image_url && (
-                        <Image
-                          src={product.image_url}
-                          alt={product.name || "Product"}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                      )}
-                    </div>
-                    {product.name && (
-                      <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-1">{product.name}</h3>
-                    )}
-                    {product.price && (
-                      <p className="text-sm text-gray-600">
-                        ${typeof product.price === "number" ? product.price.toFixed(2) : product.price}
-                      </p>
-                    )}
-                  </a>
+        <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            <Tabs defaultValue="all" className="w-full">
+              <TabsList className="mb-8">
+                <TabsTrigger value="all">All Products</TabsTrigger>
+                {categories.map((category) => (
+                  <TabsTrigger key={category.key} value={category.key}>
+                    {category.name}
+                  </TabsTrigger>
                 ))}
-              </div>
-            </>
-          ) : (
-            <div className="text-center py-20">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
-                <svg
-                  className="w-8 h-8 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  role="img"
-                  aria-label="No products"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                  />
-                </svg>
-              </div>
-              <p className="text-gray-500 text-lg">No products available yet</p>
-            </div>
-          )}
-        </div>
+              </TabsList>
 
-        <div className="fixed bottom-6 left-6 z-50 hidden lg:block">
-          <a
-            href={appStoreUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-white/90 backdrop-blur-md shadow-xl rounded-2xl p-6 block hover:bg-white transition-colors border border-gray-200"
-          >
-            <div className="flex items-center space-x-3 mb-2">
-              <Image src="/assets/logoSmall.png" alt="Melian Logo" width={40} height={40} className="rounded-full" />
-              <div className="text-2xl font-semibold text-gray-900">Get the App</div>
-            </div>
+              <TabsContent value="all">
+                <StoreProducts storeId={storeId} />
+              </TabsContent>
 
-            <div className="text-sm text-gray-600 mb-3">Effortless shopping</div>
-
-            <div>
-              <Image src="/assets/appStoreBlack.svg" alt="Download on the App Store" width={120} height={40} />
-            </div>
-          </a>
-        </div>
-
-        <div className="block lg:hidden bg-white border-t border-gray-200 p-4 fixed bottom-0 left-0 right-0 z-50">
-          <a
-            href={appStoreUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-gray-900 text-white rounded-xl px-6 py-4 flex items-center justify-center gap-3 w-full font-semibold hover:bg-gray-800 transition-colors"
-          >
-            <span>Download App</span>
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              role="img"
-              aria-label="Arrow right"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
-          </a>
+              {categories.map((category) => (
+                <TabsContent key={category.key} value={category.key}>
+                  <StoreProducts storeId={storeId} category={category.key} />
+                </TabsContent>
+              ))}
+            </Tabs>
+          </HydrationBoundary>
         </div>
       </div>
     </>

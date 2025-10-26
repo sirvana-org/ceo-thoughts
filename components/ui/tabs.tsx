@@ -11,7 +11,15 @@ const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
 >(({ className, ...props }, ref) => (
-  <TabsPrimitive.List ref={ref} className={cn("inline-flex items-center gap-2 md:gap-4", className)} {...props} />
+  <TabsPrimitive.List
+    ref={ref}
+    className={cn(
+      "flex items-center gap-2 md:gap-4 overflow-x-auto w-full scrollbar-hide pb-2",
+      "[-webkit-overflow-scrolling:touch]",
+      className,
+    )}
+    {...props}
+  />
 ));
 TabsList.displayName = TabsPrimitive.List.displayName;
 
@@ -35,7 +43,7 @@ const TabsTrigger = React.forwardRef<
       value={value}
       onClick={handleClick}
       className={cn(
-        "inline-flex items-center justify-center whitespace-nowrap body-small text-lg transition-all focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 text-neutral-grayPrimary/50 data-[state=active]:text-neutral-blackPrimary",
+        "inline-flex items-center justify-center whitespace-nowrap body-small text-lg transition-all focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 text-neutral-grayPrimary/50 data-[state=active]:text-neutral-blackPrimary flex-shrink-0",
         className,
       )}
       {...props}
