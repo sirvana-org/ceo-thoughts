@@ -1,9 +1,8 @@
 "use client";
 
 import { useInfiniteQuery } from "@tanstack/react-query";
-import Image from "next/image";
-import Link from "next/link";
 import { Spinner } from "@/features/grid/masonry-list";
+import { StoreItem } from "@/features/stores/store-item";
 import type { CollectionStoresQueryKey } from "./collection-queries";
 import { collectionQueries } from "./collection-queries";
 import { collectionStoresQueryFn, getCollectionStoresNextPageParam } from "./collection-stores-query";
@@ -42,18 +41,7 @@ export function CollectionStores({ collectionId }: CollectionStoresProps) {
     <section>
       <div className="space-y-5">
         {allStores.map((store) => (
-          <div key={store.id} className="flex items-center gap-3">
-            {store.logo ? (
-              <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border border-gray-200">
-                <Image src={store.logo} alt={store.name} fill className="object-contain" />
-              </div>
-            ) : (
-              <div className="w-12 h-12 rounded-full bg-gray-200 flex-shrink-0" />
-            )}
-            <div className="flex-1 min-w-0">
-              <p className="body-small text-neutral-blackPrimary truncate">{store.name}</p>
-            </div>
-          </div>
+          <StoreItem key={store.id} store={store} />
         ))}
       </div>
       {hasNextPage && (

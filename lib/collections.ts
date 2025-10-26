@@ -199,6 +199,7 @@ export interface UserCollection {
   user_id: string;
   isAdded: boolean;
   previewImages: string[];
+  previewLogos?: string[];
   isOwner: boolean;
   ownerUserName: string | null;
   ownerProfilePicture?: string | null;

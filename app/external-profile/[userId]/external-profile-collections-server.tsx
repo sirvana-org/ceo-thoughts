@@ -27,6 +27,7 @@ export function ExternalProfileCollectionsServer({ collections }: ExternalProfil
           name={collection.name}
           cover={collection.cover}
           previewImages={collection.previewImages}
+          previewLogos={collection.previewLogos}
           ownerUserName={collection.ownerUserName}
           ownerProfilePicture={collection.ownerProfilePicture}
           priority={index < 10}

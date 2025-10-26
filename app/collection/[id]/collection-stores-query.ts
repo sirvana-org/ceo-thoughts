@@ -1,5 +1,5 @@
 import type { QueryFunctionContext } from "@tanstack/react-query";
-import { fetchCollectionStores, type CollectionStoresPage } from "@/lib/collections";
+import { type CollectionStoresPage, fetchCollectionStores } from "@/lib/collections";
 import type { CollectionStoresQueryKey } from "./collection-queries";
 
 export const COLLECTION_STORES_PAGE_SIZE = 20;

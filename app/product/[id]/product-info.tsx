@@ -71,17 +71,15 @@ export function ProductInfo({ productId }: ProductInfoProps) {
 
         {displayPrice !== null && displayPrice !== undefined && (
           <div className="flex items-baseline gap-3 mb-4">
-            <span className="subhead-medium">
-              {formatPrice(product.currency, displayPrice)}
-            </span>
+            <span className="subhead-medium">{formatPrice(product.currency, displayPrice)}</span>
             {product.promotionalPrice !== null &&
               product.promotionalPrice !== undefined &&
               product.price !== null &&
               product.price !== undefined && (
-              <span className="subhead-medium text-neutral-grayPrimary line-through">
-                {formatPrice(product.currency, product.price)}
-              </span>
-            )}
+                <span className="subhead-medium text-neutral-grayPrimary line-through">
+                  {formatPrice(product.currency, product.price)}
+                </span>
+              )}
           </div>
         )}
       </div>

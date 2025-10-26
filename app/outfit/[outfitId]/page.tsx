@@ -154,7 +154,10 @@ export default async function OutfitPage({ params }: PageProps) {
   return (
     <>
       {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Required for JSON-LD structured data */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
+      />
 
       <div className="min-h-screen bg-white relative pb-24 lg:pb-8">
         <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 py-8 md:py-12">
