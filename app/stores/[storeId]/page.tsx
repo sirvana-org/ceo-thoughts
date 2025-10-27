@@ -199,7 +199,7 @@ export default async function StorePage({ params }: PageProps) {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
+        <div className="w-full px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20">
           <HydrationBoundary state={dehydrate(queryClient)}>
             <Tabs defaultValue="all" className="w-full">
               <TabsList className="mb-8">
@@ -211,12 +211,12 @@ export default async function StorePage({ params }: PageProps) {
                 ))}
               </TabsList>
 
-              <TabsContent value="all">
+              <TabsContent value="all" className="w-full">
                 <StoreProducts storeId={storeId} />
               </TabsContent>
 
               {categories.map((category) => (
-                <TabsContent key={category.key} value={category.key}>
+                <TabsContent key={category.key} value={category.key} className="w-full">
                   <StoreProducts storeId={storeId} category={category.key} />
                 </TabsContent>
               ))}
