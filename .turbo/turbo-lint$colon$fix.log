@@ -1,0 +1,5 @@
+
+
+> @melian/web@0.1.0 lint:fix /Users/mateozarate/sirvana/monorepo/apps/web
+> biome check --write
+

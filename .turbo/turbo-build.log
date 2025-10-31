@@ -1,0 +1,38 @@
+
+> ceo-thoughts@0.1.0 build /Users/mateozarate/sirvana/monorepo/ceo-thoughts
+> next build
+
+   ▲ Next.js 15.2.4
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Skipping validation of types
+   Skipping linting
+   Collecting page data ...
+   Generating static pages (0/5) ...
+   Generating static pages (1/5) 
+   Generating static pages (2/5) 
+   Generating static pages (3/5) 
+ ✓ Generating static pages (5/5)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /                                    8.12 kB         114 kB
+├ ○ /_not-found                            978 B         102 kB
+├ ƒ /collection/[id]                     3.68 kB         243 kB
+├ ƒ /external-profile/[userId]           1.15 kB         214 kB
+├ ○ /legal/privacy                         267 B         101 kB
+├ ƒ /outfit/[outfitId]                     170 B         107 kB
+├ ƒ /product/[id]                        4.25 kB         236 kB
+└ ƒ /stores/[storeId]                    3.19 kB         239 kB
++ First Load JS shared by all             101 kB
+  ├ chunks/594-dc6876da7169ab03.js       45.9 kB
+  ├ chunks/de558cb3-f1f6e21e7c2d5b34.js  53.2 kB
+  └ other shared chunks (total)          1.87 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

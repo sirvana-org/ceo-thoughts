@@ -1,0 +1,365 @@
+
+> ceo-thoughts@0.1.0 lint /Users/mateozarate/sirvana/monorepo/ceo-thoughts
+> biome lint
+
+app/collection/[id]/collection-header.tsx:9:7 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━
+
+  ! This variable CollectionUserInfo is unused.
+  
+     7 │ import { collectionQueries } from "./collection-queries";
+     8 │ 
+   > 9 │ const CollectionUserInfo = ({ collection }: { collection: CollectionWithUser }) => {
+       │       ^^^^^^^^^^^^^^^^^^
+    10 │   return (
+    11 │     <div className="flex flex-row items-center gap-2 md:gap-3">
+  
+  i Unused variables are often the result of an incomplete refactoring, typos, or other sources of bugs.
+  
+  i Unsafe fix: If this is intentional, prepend CollectionUserInfo with an underscore.
+  
+      7   7 │   import { collectionQueries } from "./collection-queries";
+      8   8 │   
+      9     │ - const·CollectionUserInfo·=·({·collection·}:·{·collection:·CollectionWithUser·})·=>·{
+          9 │ + const·_CollectionUserInfo·=·({·collection·}:·{·collection:·CollectionWithUser·})·=>·{
+     10  10 │     return (
+     11  11 │       <div className="flex flex-row items-center gap-2 md:gap-3">
+  
+
+app/external-profile/[userId]/external-profile-collections.tsx:5:23 lint/correctness/noUnusedImports  FIXABLE  ━━━━━━━━━━
+
+  ! Several of these imports are unused.
+  
+    3 │ import { useInfiniteQuery } from "@tanstack/react-query";
+    4 │ import { CollectionCard } from "@/features/collection/collection-card";
+  > 5 │ import { MasonryList, Spinner } from "@/features/grid/masonry-list";
+      │                       ^^^^^^^
+    6 │ import type { UserCollectionsQueryKey } from "./external-profile-collections-queries";
+    7 │ import { userCollectionsQueries } from "./external-profile-collections-queries";
+  
+  i Unused imports might be the result of an incomplete refactoring.
+  
+  i Unsafe fix: Remove the unused imports.
+  
+    5 │ import·{·MasonryList,·Spinner·}·from·"@/features/grid/masonry-list";
+      │                       --------                                      
+
+app/external-profile/[userId]/loading.tsx:1:8 lint/correctness/noUnusedImports  FIXABLE  ━━━━━━━━━━━
+
+  ! This import is unused.
+  
+  > 1 │ import { AppStoreHeader } from "./app-store-header";
+      │        ^^^^^^^^^^^^^^^^^^
+    2 │ 
+    3 │ export default function ExternalProfileLoadingSkeleton() {
+  
+  i Unused imports might be the result of an incomplete refactoring.
+  
+  i Unsafe fix: Remove the unused imports.
+  
+    1 │ import·{·AppStoreHeader·}·from·"./app-store-header";
+      │ ----------------------------------------------------
+
+app/outfit/[outfitId]/page.tsx:156:8 suppressions/unused ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Suppression comment has no effect. Remove the suppression or make sure you are suppressing the correct rule.
+  
+    154 │   return (
+    155 │     <>
+  > 156 │       {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Required for JSON-LD structured data */}
+        │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    157 │       <script
+    158 │         type="application/ld+json"
+  
+
+features/collection/collection-card.tsx:29:9 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━
+
+  ! This variable hasPreviewLogos is unused.
+  
+    27 │ }: CollectionCardProps) {
+    28 │   const hasPreviewImages = previewImages.length > 0;
+  > 29 │   const hasPreviewLogos = previewLogos.length > 0;
+       │         ^^^^^^^^^^^^^^^
+    30 │   const showFullSizeImage = cover || (hasPreviewImages && previewImages.length < 3);
+    31 │   const showProductGrid = !cover && previewImages.length >= 3;
+  
+  i Unused variables are often the result of an incomplete refactoring, typos, or other sources of bugs.
+  
+  i Unsafe fix: If this is intentional, prepend hasPreviewLogos with an underscore.
+  
+     27  27 │   }: CollectionCardProps) {
+     28  28 │     const hasPreviewImages = previewImages.length > 0;
+     29     │ - ··const·hasPreviewLogos·=·previewLogos.length·>·0;
+         29 │ + ··const·_hasPreviewLogos·=·previewLogos.length·>·0;
+     30  30 │     const showFullSizeImage = cover || (hasPreviewImages && previewImages.length < 3);
+     31  31 │     const showProductGrid = !cover && previewImages.length >= 3;
+  
+
+styles/globals.css:100:17 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Avoid the use of the !important style.
+  
+     98 │ video:focus,
+     99 │ video:active {
+  > 100 │   outline: none !important;
+        │                 ^^^^^^^^^^
+    101 │   box-shadow: none !important;
+    102 │ }
+  
+  i This style reverses the cascade logic, and precedence is reversed. This could lead to having styles with higher specificity being overridden by styles with lower specificity.
+  
+  i Unsafe fix: Remove the style.
+  
+    100 │ ··outline:·none·!important;
+        │                ----------- 
+
+styles/globals.css:101:20 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Avoid the use of the !important style.
+  
+     99 │ video:active {
+    100 │   outline: none !important;
+  > 101 │   box-shadow: none !important;
+        │                    ^^^^^^^^^^
+    102 │ }
+    103 │ 
+  
+  i This style reverses the cascade logic, and precedence is reversed. This could lead to having styles with higher specificity being overridden by styles with lower specificity.
+  
+  i Unsafe fix: Remove the style.
+  
+    101 │ ··box-shadow:·none·!important;
+        │                   ----------- 
+
+app/collection/[id]/loading.tsx:38:23 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    36 │         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-12">
+    37 │           {[...Array(8)].map((_, i) => (
+  > 38 │             <div key={i} className="flex flex-col gap-2">
+       │                       ^
+    39 │               <div
+    40 │                 className="w-full bg-gray-200 rounded-lg animate-pulse"
+  
+  i This is the source of the key value.
+  
+    35 │         {/* Masonry grid skeleton */}
+    36 │         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-12">
+  > 37 │           {[...Array(8)].map((_, i) => (
+       │                                  ^
+    38 │             <div key={i} className="flex flex-col gap-2">
+    39 │               <div
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+app/external-profile/[userId]/loading.tsx:19:25 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    17 │           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    18 │             {[...Array(8)].map((_, i) => (
+  > 19 │               <div key={i} className="flex flex-col gap-3">
+       │                         ^
+    20 │                 <div
+    21 │                   className="w-full bg-gray-200 rounded-lg animate-pulse"
+  
+  i This is the source of the key value.
+  
+    16 │         <section className="w-full">
+    17 │           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+  > 18 │             {[...Array(8)].map((_, i) => (
+       │                                    ^
+    19 │               <div key={i} className="flex flex-col gap-3">
+    20 │                 <div
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+app/globals.css:196:6 parse ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Tailwind-specific syntax is disabled.
+  
+    194 │ @layer base {
+    195 │   * {
+  > 196 │     @apply border-border;
+        │      ^^^^^^^^^^^^^^^^^^^^
+    197 │   }
+    198 │   body {
+  
+  i Enable `tailwindDirectives` in the css parser options, or remove this if you are not using Tailwind CSS.
+  
+
+app/globals.css:199:6 parse ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Tailwind-specific syntax is disabled.
+  
+    197 │   }
+    198 │   body {
+  > 199 │     @apply bg-background text-foreground;
+        │      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    200 │   }
+    201 │ }
+  
+  i Enable `tailwindDirectives` in the css parser options, or remove this if you are not using Tailwind CSS.
+  
+
+app/globals.css:1:2 lint/suspicious/noUnknownAtRules ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected unknown at-rule: tailwind 
+  
+  > 1 │ @tailwind base;
+      │  ^^^^^^^^
+    2 │ @tailwind components;
+    3 │ @tailwind utilities;
+  
+  i tailwind is not a standard CSS at-rule, which may lead to unexpected styling results or failure to interpret the styles as intended.
+  
+  i See MDN web docs for a known list of at-rules.
+  
+  i To fix this issue, consider removing the unknown at-rule.
+  
+
+app/globals.css:2:2 lint/suspicious/noUnknownAtRules ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected unknown at-rule: tailwind 
+  
+    1 │ @tailwind base;
+  > 2 │ @tailwind components;
+      │  ^^^^^^^^
+    3 │ @tailwind utilities;
+    4 │ 
+  
+  i tailwind is not a standard CSS at-rule, which may lead to unexpected styling results or failure to interpret the styles as intended.
+  
+  i See MDN web docs for a known list of at-rules.
+  
+  i To fix this issue, consider removing the unknown at-rule.
+  
+
+app/globals.css:3:2 lint/suspicious/noUnknownAtRules ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected unknown at-rule: tailwind 
+  
+    1 │ @tailwind base;
+    2 │ @tailwind components;
+  > 3 │ @tailwind utilities;
+      │  ^^^^^^^^
+    4 │ 
+    5 │ @font-face {
+  
+  i tailwind is not a standard CSS at-rule, which may lead to unexpected styling results or failure to interpret the styles as intended.
+  
+  i See MDN web docs for a known list of at-rules.
+  
+  i To fix this issue, consider removing the unknown at-rule.
+  
+
+app/outfit/[outfitId]/page.tsx:159:9 lint/security/noDangerouslySetInnerHtml ━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid passing content using the dangerouslySetInnerHTML prop.
+  
+    157 │       <script
+    158 │         type="application/ld+json"
+  > 159 │         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
+        │         ^^^^^^^^^^^^^^^^^^^^^^^
+    160 │       />
+    161 │ 
+  
+  ! Setting content using code can expose users to cross-site scripting (XSS) attacks
+  
+
+styles/globals.css:89:6 parse ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Tailwind-specific syntax is disabled.
+  
+    87 │ @layer base {
+    88 │   * {
+  > 89 │     @apply border-border;
+       │      ^^^^^^^^^^^^^^^^^^^^
+    90 │   }
+    91 │   body {
+  
+The number of diagnostics exceeds the limit allowed. Use --max-diagnostics to increase it.
+  i Enable `tailwindDirectives` in the css parser options, or remove this if you are not using Tailwind CSS.
+  
+
+styles/globals.css:92:6 parse ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Tailwind-specific syntax is disabled.
+  
+    90 │   }
+    91 │   body {
+  > 92 │     @apply bg-background text-foreground;
+       │      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    93 │   }
+    94 │ }
+  
+  i Enable `tailwindDirectives` in the css parser options, or remove this if you are not using Tailwind CSS.
+  
+
+styles/globals.css:1:2 lint/suspicious/noUnknownAtRules ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected unknown at-rule: tailwind 
+  
+  > 1 │ @tailwind base;
+      │  ^^^^^^^^
+    2 │ @tailwind components;
+    3 │ @tailwind utilities;
+  
+  i tailwind is not a standard CSS at-rule, which may lead to unexpected styling results or failure to interpret the styles as intended.
+  
+  i See MDN web docs for a known list of at-rules.
+  
+  i To fix this issue, consider removing the unknown at-rule.
+  
+
+styles/globals.css:2:2 lint/suspicious/noUnknownAtRules ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected unknown at-rule: tailwind 
+  
+    1 │ @tailwind base;
+  > 2 │ @tailwind components;
+      │  ^^^^^^^^
+    3 │ @tailwind utilities;
+    4 │ 
+  
+  i tailwind is not a standard CSS at-rule, which may lead to unexpected styling results or failure to interpret the styles as intended.
+  
+  i See MDN web docs for a known list of at-rules.
+  
+  i To fix this issue, consider removing the unknown at-rule.
+  
+
+styles/globals.css:3:2 lint/suspicious/noUnknownAtRules ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected unknown at-rule: tailwind 
+  
+    1 │ @tailwind base;
+    2 │ @tailwind components;
+  > 3 │ @tailwind utilities;
+      │  ^^^^^^^^
+    4 │ 
+    5 │ body {
+  
+  i tailwind is not a standard CSS at-rule, which may lead to unexpected styling results or failure to interpret the styles as intended.
+  
+  i See MDN web docs for a known list of at-rules.
+  
+  i To fix this issue, consider removing the unknown at-rule.
+  
+
+Diagnostics not shown: 1.
+Checked 66 files in 36ms. No fixes applied.
+Found 13 errors.
+lint ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Found 8 warnings.
+
+  × Some errors were emitted while running checks.
+  
+
+ ELIFECYCLE  Command failed with exit code 1.

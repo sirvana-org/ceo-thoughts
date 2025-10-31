@@ -1,7 +1,7 @@
 "use client";
 
+import { type ReactNode, useEffect, useRef } from "react";
 import Masonry from "react-masonry-css";
-import { useEffect, useRef, type ReactNode } from "react";
 import { trackEvent } from "@/lib/mixpanel";
 
 interface SpinnerProps {

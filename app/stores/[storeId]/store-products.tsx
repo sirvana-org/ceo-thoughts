@@ -3,7 +3,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { MasonryList, Spinner } from "@/features/grid/masonry-list";
 import { ProductCard } from "@/features/product/product-card";
-import { storeProductsQueryFn, getStoreProductsNextPageParam } from "./store-products-query";
+import { getStoreProductsNextPageParam, storeProductsQueryFn } from "./store-products-query";
 import type { StoreProductsQueryKey } from "./store-queries";
 import { storeQueries } from "./store-queries";
 

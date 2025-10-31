@@ -35,7 +35,7 @@ export const storeProductsQueryFn = async ({
 };
 
 export const getStoreProductsNextPageParam = (
-  lastPage: StoreProductsResponse & { limit?: number } | undefined,
+  lastPage: (StoreProductsResponse & { limit?: number }) | undefined,
   allPages: (StoreProductsResponse & { limit?: number })[],
 ) => {
   if (!lastPage) return undefined;
